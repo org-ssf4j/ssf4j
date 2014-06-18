@@ -20,6 +20,7 @@ public class JdkSerializer implements Serializer {
 
 	@Override
 	public void close() throws IOException {
+		flush();
 		out.close();
 	}
 

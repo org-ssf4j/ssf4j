@@ -25,6 +25,7 @@ public class KryoSerializer implements Serializer {
 
 	@Override
 	public void close() throws IOException {
+		flush();
 		out.close();
 	}
 

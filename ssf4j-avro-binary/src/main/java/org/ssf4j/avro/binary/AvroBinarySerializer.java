@@ -6,32 +6,34 @@ import java.io.OutputStream;
 import org.apache.avro.Schema;
 import org.apache.avro.io.Encoder;
 import org.apache.avro.io.EncoderFactory;
+import org.apache.avro.reflect.ReflectDatumReader;
+import org.apache.avro.reflect.ReflectDatumWriter;
 import org.ssf4j.Serializer;
 
 public class AvroBinarySerializer implements Serializer {
 	
+	protected OutputStream out;
 	protected Encoder enc;
 	
 	public AvroBinarySerializer(OutputStream out) throws IOException {
+		this.out = out;
 		enc = EncoderFactory.get().binaryEncoder(out, null);
 	}
 
 	@Override
 	public void flush() throws IOException {
-		// TODO Auto-generated method stub
-		
+		enc.flush();
 	}
 
 	@Override
 	public void close() throws IOException {
-		// TODO Auto-generated method stub
-		
+		flush();
+		out.close();
 	}
 
 	@Override
 	public void write(Object object) throws IOException {
-		// TODO Auto-generated method stub
-		
+		new ReflectDatumWriter<Object>().write(object, enc);
 	}
 
 }

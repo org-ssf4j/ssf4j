@@ -25,4 +25,9 @@ public class AvroJsonDeserializer implements Deserializer {
 		return new SpecificDatumReader<IndexedRecord>(schema).read(null, dec);
 	}
 
+	@Override
+	public <T> T read(Class<T> type) throws IOException, ClassNotFoundException {
+		return type.cast(read());
+	}
+
 }

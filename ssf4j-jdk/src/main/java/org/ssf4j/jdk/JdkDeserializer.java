@@ -18,4 +18,9 @@ public class JdkDeserializer implements Deserializer {
 		return in.readObject();
 	}
 
+	@Override
+	public <T> T read(Class<T> type) throws IOException, ClassNotFoundException {
+		return type.cast(read());
+	}
+
 }

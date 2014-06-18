@@ -29,6 +29,7 @@ public class AvroJsonSerializer implements Serializer {
 
 	@Override
 	public void close() throws IOException {
+		flush();
 		out.close();
 	}
 

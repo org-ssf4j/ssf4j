@@ -23,4 +23,9 @@ public class KryoDeserializer implements Deserializer {
 		return kryo.readClassAndObject(in);
 	}
 
+	@Override
+	public <T> T read(Class<T> type) throws IOException, ClassNotFoundException {
+		return type.cast(read());
+	}
+
 }
