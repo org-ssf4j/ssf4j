@@ -6,6 +6,7 @@ public class Serializations {
 	public static final String JACKSON = "org.ssf4j.jackson.JacksonSerialization";
 	public static final String JDK = "org.ssf4j.jdk.JdkSerialization";
 	public static final String KRYO = "org.ssf4j.kryo.KryoSerialization";
+	public static final String PURPLEJRANK = "org.ssf4j.purplejrank.PurpleJrankSerialization";
 	
 	public static Serialization get(String name) {
 		try {
