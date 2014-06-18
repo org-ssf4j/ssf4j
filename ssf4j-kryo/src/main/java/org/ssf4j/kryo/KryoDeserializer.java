@@ -25,4 +25,9 @@ public class KryoDeserializer<T> implements Deserializer<T> {
 		return kryo.readObject(in, type);
 	}
 
+	@Override
+	public void close() throws IOException {
+		in.close();
+	}
+
 }

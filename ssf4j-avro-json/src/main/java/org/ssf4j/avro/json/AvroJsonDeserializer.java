@@ -14,9 +14,11 @@ public class AvroJsonDeserializer<T> implements Deserializer<T> {
 
 	protected Schema schema;
 	protected Decoder dec;
+	protected InputStream in;
 	
 	public AvroJsonDeserializer(Schema schema, InputStream in) throws IOException {
 		this.schema = schema;
+		this.in = in;
 		dec = DecoderFactory.get().jsonDecoder(schema, in);
 	}
 	
@@ -24,6 +26,11 @@ public class AvroJsonDeserializer<T> implements Deserializer<T> {
 	@Override
 	public T read() throws IOException, ClassNotFoundException {
 		return (T) new SpecificDatumReader<IndexedRecord>(schema).read(null, dec);
+	}
+
+	@Override
+	public void close() throws IOException {
+		in.close();
 	}
 
 }

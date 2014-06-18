@@ -12,9 +12,11 @@ public class AvroBinaryDeserializer<T> implements Deserializer<T> {
 
 	protected Class<T> type;
 	protected Decoder dec;
+	protected InputStream in;
 	
 	public AvroBinaryDeserializer(Class<T> type, InputStream in) throws IOException {
 		this.type = type;
+		this.in = in;
 		dec = DecoderFactory.get().binaryDecoder(in, null);
 	}
 	
@@ -23,6 +25,11 @@ public class AvroBinaryDeserializer<T> implements Deserializer<T> {
 		if(type == null)
 			throw new UnsupportedOperationException();
 		return new ReflectDatumReader<T>(type).read(null, dec);
+	}
+
+	@Override
+	public void close() throws IOException {
+		in.close();
 	}
 
 }

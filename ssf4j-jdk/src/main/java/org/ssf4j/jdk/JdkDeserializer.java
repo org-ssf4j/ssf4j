@@ -19,4 +19,9 @@ public class JdkDeserializer<T> implements Deserializer<T> {
 		return (T) in.readObject();
 	}
 
+	@Override
+	public void close() throws IOException {
+		in.close();
+	}
+
 }
