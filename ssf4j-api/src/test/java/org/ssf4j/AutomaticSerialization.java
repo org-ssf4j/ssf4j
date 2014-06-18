@@ -6,12 +6,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class AutomaticSerialization implements Serialization {
-	private static final Logger log = LoggerFactory.getLogger(AutomaticSerialization.class);
-	
 	private static AutomaticSerialization instance;
 	private static Serialization implementation;
 	
@@ -40,7 +35,7 @@ public class AutomaticSerialization implements Serialization {
 				Enumeration<URL> impls = cl.getResources("org/ssf4j/Implementation.class");
 				URL chosen = impls.nextElement();
 				if(impls.hasMoreElements()) {
-					log.warn("Multiple serialization implementations found on classpath. Actually chose: {}", chosen);
+					System.err.println("Multiple serialization implementations found on classpath. Actually chose: " + chosen);
 				}
 			} catch(IOException e) {
 				throw new RuntimeException(e);

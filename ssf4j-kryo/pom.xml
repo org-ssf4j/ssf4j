@@ -24,5 +24,12 @@
   		<version>4.11</version>
   		<scope>test</scope>
   	</dependency>
+  	<dependency>
+  		<groupId>org.ssf4j</groupId>
+  		<artifactId>ssf4j-api</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  		<classifier>tests</classifier>
+  		<scope>test</scope>
+  	</dependency>
   </dependencies>
 </project>
