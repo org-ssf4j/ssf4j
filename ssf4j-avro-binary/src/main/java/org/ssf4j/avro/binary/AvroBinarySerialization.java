@@ -19,8 +19,7 @@ public class AvroBinarySerialization implements Serialization {
 	@Override
 	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type)
 			throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return new AvroBinaryDeserializer<T>(type, in);
 	}
 
 
