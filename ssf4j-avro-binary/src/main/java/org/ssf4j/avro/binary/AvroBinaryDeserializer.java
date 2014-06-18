@@ -8,12 +8,12 @@ import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.reflect.ReflectDatumReader;
 import org.ssf4j.Deserializer;
 
-public class AvroBinaryDeserializer<T> implements Deserializer {
+public class AvroBinaryDeserializer<A> implements Deserializer {
 
-	protected Class<T> type;
+	protected Class<A> type;
 	protected Decoder dec;
 	
-	public AvroBinaryDeserializer(Class<T> type, InputStream in) throws IOException {
+	public AvroBinaryDeserializer(Class<A> type, InputStream in) throws IOException {
 		this.type = type;
 		dec = DecoderFactory.get().binaryDecoder(in, null);
 	}
@@ -22,7 +22,7 @@ public class AvroBinaryDeserializer<T> implements Deserializer {
 	public Object read() throws IOException, ClassNotFoundException {
 		if(type == null)
 			throw new UnsupportedOperationException();
-		return new ReflectDatumReader<T>(type).read(null, dec);
+		return new ReflectDatumReader<A>(type).read(null, dec);
 	}
 
 	@Override

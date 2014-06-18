@@ -8,24 +8,24 @@ import org.ssf4j.Deserializer;
 import org.ssf4j.Serialization;
 import org.ssf4j.Serializer;
 
-public class AvroBinarySerialization<T> implements Serialization {
+public class AvroBinarySerialization<A> implements Serialization {
 
-	protected Class<T> type;
+	protected Class<A> type;
 	
 	public AvroBinarySerialization() {}
 	
-	public AvroBinarySerialization(Class<T> type) {
+	public AvroBinarySerialization(Class<A> type) {
 		this.type = type;
 	}
 	
 	@Override
 	public Serializer newSerializer(OutputStream out) throws IOException {
-		return new AvroBinarySerializer<T>(type, out);
+		return new AvroBinarySerializer<A>(type, out);
 	}
 
 	@Override
 	public Deserializer newDeserializer(InputStream in) throws IOException {
-		return new AvroBinaryDeserializer<T>(type, in);
+		return new AvroBinaryDeserializer<A>(type, in);
 	}
 
 }
