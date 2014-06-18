@@ -10,7 +10,7 @@ import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.ssf4j.Deserializer;
 
-public class AvroJsonDeserializer implements Deserializer {
+public class AvroJsonDeserializer<T> implements Deserializer<T> {
 
 	protected Schema schema;
 	protected Decoder dec;
@@ -20,14 +20,10 @@ public class AvroJsonDeserializer implements Deserializer {
 		dec = DecoderFactory.get().jsonDecoder(schema, in);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object read() throws IOException, ClassNotFoundException {
-		return new SpecificDatumReader<IndexedRecord>(schema).read(null, dec);
-	}
-
-	@Override
-	public <T> T read(Class<T> type) throws IOException, ClassNotFoundException {
-		return type.cast(read());
+	public T read() throws IOException, ClassNotFoundException {
+		return (T) new SpecificDatumReader<IndexedRecord>(schema).read(null, dec);
 	}
 
 }

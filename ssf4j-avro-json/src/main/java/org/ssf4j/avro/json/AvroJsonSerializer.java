@@ -10,7 +10,7 @@ import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.ssf4j.Serializer;
 
-public class AvroJsonSerializer implements Serializer {
+public class AvroJsonSerializer<T> implements Serializer<T> {
 	
 	protected OutputStream out;
 	protected Schema schema;
@@ -34,7 +34,7 @@ public class AvroJsonSerializer implements Serializer {
 	}
 
 	@Override
-	public void write(Object object) throws IOException {
+	public void write(T object) throws IOException {
 		new SpecificDatumWriter<IndexedRecord>(schema).write((IndexedRecord) object, enc);
 	}
 

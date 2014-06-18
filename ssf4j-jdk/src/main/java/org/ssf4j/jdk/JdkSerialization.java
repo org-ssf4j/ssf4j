@@ -10,18 +10,17 @@ import org.ssf4j.Serializer;
 
 public class JdkSerialization implements Serialization {
 
-	public JdkSerialization() {
-		super();
+	@Override
+	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type)
+			throws IOException {
+		return new JdkSerializer<T>(out);
 	}
 
 	@Override
-	public Serializer newSerializer(OutputStream out) throws IOException {
-		return new JdkSerializer(out);
+	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type)
+			throws IOException {
+		return new JdkDeserializer<T>(in);
 	}
 
-	@Override
-	public Deserializer newDeserializer(InputStream in) throws IOException {
-		return new JdkDeserializer(in);
-	}
 
 }

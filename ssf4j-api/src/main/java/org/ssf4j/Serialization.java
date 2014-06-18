@@ -5,6 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public interface Serialization {
-	public Serializer newSerializer(OutputStream out) throws IOException;
-	public Deserializer newDeserializer(InputStream in) throws IOException;
+	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type) throws IOException;
+	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type) throws IOException;
 }

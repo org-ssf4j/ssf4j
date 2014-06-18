@@ -8,7 +8,7 @@ import org.ssf4j.Serializer;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
 
-public class KryoSerializer implements Serializer {
+public class KryoSerializer<T> implements Serializer<T> {
 
 	protected Kryo kryo;
 	protected Output out;
@@ -31,7 +31,7 @@ public class KryoSerializer implements Serializer {
 
 	@Override
 	public void write(Object object) throws IOException {
-		kryo.writeClassAndObject(out, object);
+		kryo.writeObject(out, object);
 	}
 
 }

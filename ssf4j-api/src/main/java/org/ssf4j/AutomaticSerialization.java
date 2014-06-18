@@ -53,11 +53,11 @@ public class AutomaticSerialization implements Serialization {
 		getImplementation();
 	}
 	
-	public Serializer newSerializer(OutputStream out) throws IOException {
-		return getImplementation().newSerializer(out);
+	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type) throws IOException {
+		return getImplementation().newSerializer(out, type);
 	}
 	
-	public Deserializer newDeserializer(InputStream in) throws IOException {
-		return getImplementation().newDeserializer(in);
+	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type) throws IOException {
+		return getImplementation().newDeserializer(in, type);
 	}
 }

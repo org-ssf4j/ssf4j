@@ -6,7 +6,7 @@ import java.io.OutputStream;
 
 import org.ssf4j.Serializer;
 
-public class JdkSerializer implements Serializer {
+public class JdkSerializer<T> implements Serializer<T> {
 	protected ObjectOutputStream out;
 	
 	public JdkSerializer(OutputStream out) throws IOException {
@@ -25,7 +25,7 @@ public class JdkSerializer implements Serializer {
 	}
 
 	@Override
-	public void write(Object object) throws IOException {
+	public void write(T object) throws IOException {
 		out.writeObject(object);
 	}
 

@@ -21,13 +21,13 @@ public class KryoSerialization implements Serialization {
 	}
 	
 	@Override
-	public Serializer newSerializer(OutputStream out) throws IOException {
-		return new KryoSerializer(kryo, out);
+	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type) throws IOException {
+		return new KryoSerializer<T>(kryo, out);
 	}
 
 	@Override
-	public Deserializer newDeserializer(InputStream in) throws IOException {
-		return new KryoDeserializer(kryo, in);
+	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type) throws IOException {
+		return new KryoDeserializer<T>(kryo, in, type);
 	}
 
 }
