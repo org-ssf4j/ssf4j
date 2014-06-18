@@ -6,8 +6,13 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
-public class AutomaticSerialization {
+public class AutomaticSerialization implements Serialization {
+	private static AutomaticSerialization instance = new AutomaticSerialization();
 	private static Serialization implementation;
+	
+	public static AutomaticSerialization get() {
+		return instance;
+	}
 	
 	private static synchronized Serialization getImplementation() {
 		if(implementation == null) {
@@ -38,11 +43,13 @@ public class AutomaticSerialization {
 		return implementation;
 	}
 	
-	public static Serializer newSerializer(OutputStream out) throws IOException {
+	private AutomaticSerialization() {}
+	
+	public Serializer newSerializer(OutputStream out) throws IOException {
 		return getImplementation().newSerializer(out);
 	}
 	
-	public static Deserializer newDeserializer(InputStream in) throws IOException {
+	public Deserializer newDeserializer(InputStream in) throws IOException {
 		return getImplementation().newDeserializer(in);
 	}
 }

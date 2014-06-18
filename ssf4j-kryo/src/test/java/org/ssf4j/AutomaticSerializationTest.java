@@ -9,13 +9,13 @@ import org.ssf4j.AutomaticSerialization;
 public class AutomaticSerializationTest {
 	@Test
 	public void testNewSerializer() throws Exception {
-		AutomaticSerialization.newSerializer(new ByteArrayOutputStream());
+		AutomaticSerialization.get().newSerializer(new ByteArrayOutputStream());
 	}
 	
 	@Test
 	public void testNewDeserializer() throws Exception {
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
-		AutomaticSerialization.newSerializer(buf).close();
-		AutomaticSerialization.newDeserializer(new ByteArrayInputStream(buf.toByteArray()));
+		AutomaticSerialization.get().newSerializer(buf).close();
+		AutomaticSerialization.get().newDeserializer(new ByteArrayInputStream(buf.toByteArray()));
 	}
 }
