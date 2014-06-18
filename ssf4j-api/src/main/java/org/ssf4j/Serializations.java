@@ -3,6 +3,7 @@ package org.ssf4j;
 public class Serializations {
 	public static final String AVRO_BINARY = "org.ssf4j.avro.binary.AvroBinarySerialization";
 	public static final String AVRO_JSON = "org.ssf4j.avro.json.AvroJsonSerialization";
+	public static final String JACKSON = "org.ssf4j.jackson.JacksonSerialization";
 	public static final String JDK = "org.ssf4j.jdk.JdkSerialization";
 	public static final String KRYO = "org.ssf4j.kryo.KryoSerialization";
 	
