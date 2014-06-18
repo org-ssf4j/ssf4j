@@ -35,7 +35,7 @@ class AvroJsonSerializer<T> implements Serializer<T> {
 
 	@Override
 	public void write(T object) throws IOException {
-		new SpecificDatumWriter<IndexedRecord>(schema).write((IndexedRecord) object, enc);
+		new SpecificDatumWriter<T>(schema).write(object, enc);
 	}
 
 }
