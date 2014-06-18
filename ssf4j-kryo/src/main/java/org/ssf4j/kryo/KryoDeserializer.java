@@ -13,8 +13,8 @@ public class KryoDeserializer implements Deserializer {
 	protected Kryo kryo;
 	protected Input in;
 	
-	public KryoDeserializer(InputStream in) {
-		this.kryo = new Kryo();
+	public KryoDeserializer(Kryo kryo, InputStream in) {
+		this.kryo = kryo != null ? kryo : new Kryo();
 		this.in = new Input(in);
 	}
 	

@@ -10,16 +10,26 @@ import org.ssf4j.Serializer;
 import org.ssf4j.kryo.KryoDeserializer;
 import org.ssf4j.kryo.KryoSerializer;
 
+import com.esotericsoftware.kryo.Kryo;
+
 public class KryoSerialization implements Serialization {
 
+	protected Kryo kryo;
+	
+	public KryoSerialization() {}
+	
+	public KryoSerialization(Kryo kryo) {
+		this.kryo = kryo;
+	}
+	
 	@Override
 	public Serializer newSerializer(OutputStream out) throws IOException {
-		return new KryoSerializer(out);
+		return new KryoSerializer(kryo, out);
 	}
 
 	@Override
 	public Deserializer newDeserializer(InputStream in) throws IOException {
-		return new KryoDeserializer(in);
+		return new KryoDeserializer(kryo, in);
 	}
 
 }

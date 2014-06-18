@@ -13,8 +13,8 @@ public class KryoSerializer implements Serializer {
 	protected Kryo kryo;
 	protected Output out;
 	
-	public KryoSerializer(OutputStream out) {
-		this.kryo = new Kryo();
+	public KryoSerializer(Kryo kryo, OutputStream out) {
+		this.kryo = kryo != null ? kryo : new Kryo();
 		this.out = new Output(out);
 	}
 	
