@@ -1,4 +1,4 @@
-package org.ssf4j;
+package org.ssf4j.jdk;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,8 +7,6 @@ import java.io.OutputStream;
 import org.ssf4j.Deserializer;
 import org.ssf4j.Serialization;
 import org.ssf4j.Serializer;
-import org.ssf4j.jdk.JdkDeserializer;
-import org.ssf4j.jdk.JdkSerializer;
 
 public class JdkSerialization implements Serialization {
 

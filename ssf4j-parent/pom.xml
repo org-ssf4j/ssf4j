@@ -14,6 +14,7 @@
 		<module>../ssf4j-api</module>
 		<module>../ssf4j-jdk</module>
 		<module>../ssf4j-kryo</module>
+		<module>../ssf4j-avro</module>
 	</modules>
 	<build>
 		<pluginManagement>

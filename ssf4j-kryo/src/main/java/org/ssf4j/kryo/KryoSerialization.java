@@ -1,4 +1,4 @@
-package org.ssf4j;
+package org.ssf4j.kryo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,8 +7,6 @@ import java.io.OutputStream;
 import org.ssf4j.Deserializer;
 import org.ssf4j.Serialization;
 import org.ssf4j.Serializer;
-import org.ssf4j.kryo.KryoDeserializer;
-import org.ssf4j.kryo.KryoSerializer;
 
 import com.esotericsoftware.kryo.Kryo;
 
