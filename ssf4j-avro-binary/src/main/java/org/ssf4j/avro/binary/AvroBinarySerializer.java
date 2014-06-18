@@ -3,19 +3,19 @@ package org.ssf4j.avro.binary;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.avro.Schema;
 import org.apache.avro.io.Encoder;
 import org.apache.avro.io.EncoderFactory;
-import org.apache.avro.reflect.ReflectDatumReader;
 import org.apache.avro.reflect.ReflectDatumWriter;
 import org.ssf4j.Serializer;
 
-public class AvroBinarySerializer implements Serializer {
+public class AvroBinarySerializer<T> implements Serializer {
 	
 	protected OutputStream out;
+	protected Class<T> type;
 	protected Encoder enc;
 	
-	public AvroBinarySerializer(OutputStream out) throws IOException {
+	public AvroBinarySerializer(Class<T> type, OutputStream out) throws IOException {
+		this.type = type;
 		this.out = out;
 		enc = EncoderFactory.get().binaryEncoder(out, null);
 	}
@@ -33,7 +33,7 @@ public class AvroBinarySerializer implements Serializer {
 
 	@Override
 	public void write(Object object) throws IOException {
-		new ReflectDatumWriter<Object>().write(object, enc);
+		new ReflectDatumWriter<T>(type).write((T) object, enc);
 	}
 
 }
