@@ -13,6 +13,7 @@ public class JdkDeserializer<T> implements Deserializer<T> {
 		this.in = new ObjectInputStream(in);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public T read() throws IOException, ClassNotFoundException {
 		return (T) in.readObject();
