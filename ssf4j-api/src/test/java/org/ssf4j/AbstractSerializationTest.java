@@ -3,6 +3,8 @@ package org.ssf4j;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Assert;
@@ -18,6 +20,9 @@ public abstract class AbstractSerializationTest<T> {
 		List<Object[]> p = new ArrayList<Object[]>();
 		
 		p.add(new Object[] {12.34, Double.class});
+		p.add(new Object[] {new Date(), Date.class});
+		p.add(new Object[] {new GregorianCalendar(), GregorianCalendar.class});
+		p.add(new Object[] {"Hello world", String.class});
 		
 		return p;
 	}
