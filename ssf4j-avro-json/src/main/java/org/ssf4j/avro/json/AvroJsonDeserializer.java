@@ -24,7 +24,6 @@ class AvroJsonDeserializer<T> implements Deserializer<T> {
 		dec = DecoderFactory.get().jsonDecoder(schema, in);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public T read() throws IOException, ClassNotFoundException {
 		Object obj = new SpecificDatumReader<IndexedRecord>(schema).read(null, dec);

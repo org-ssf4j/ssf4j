@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericContainer;
 import org.apache.avro.generic.GenericData;
 import org.ssf4j.Deserializer;
 import org.ssf4j.Serialization;

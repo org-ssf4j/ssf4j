@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.avro.Schema;
-import org.apache.avro.generic.IndexedRecord;
 import org.apache.avro.io.Encoder;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumWriter;
