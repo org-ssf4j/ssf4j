@@ -18,6 +18,7 @@
 		<module>../ssf4j-avro-binary</module>
 		<module>../ssf4j-avro-json</module>
 		<module>../ssf4j-jackson</module>
+		<module>../ssf4j-purplejrank</module>
 	</modules>
 	<build>
 		<pluginManagement>
