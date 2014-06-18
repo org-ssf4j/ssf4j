@@ -12,10 +12,12 @@ import org.slf4j.LoggerFactory;
 public class AutomaticSerialization implements Serialization {
 	private static final Logger log = LoggerFactory.getLogger(AutomaticSerialization.class);
 	
-	private static AutomaticSerialization instance = new AutomaticSerialization();
+	private static AutomaticSerialization instance;
 	private static Serialization implementation;
 	
-	public static AutomaticSerialization get() {
+	public synchronized static AutomaticSerialization get() {
+		if(instance == null)
+			instance = new AutomaticSerialization();
 		return instance;
 	}
 	
@@ -47,7 +49,9 @@ public class AutomaticSerialization implements Serialization {
 		return implementation;
 	}
 	
-	private AutomaticSerialization() {}
+	private AutomaticSerialization() {
+		getImplementation();
+	}
 	
 	public Serializer newSerializer(OutputStream out) throws IOException {
 		return getImplementation().newSerializer(out);
