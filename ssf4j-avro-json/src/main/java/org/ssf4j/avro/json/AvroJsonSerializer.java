@@ -10,7 +10,7 @@ import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.ssf4j.Serializer;
 
-public class AvroJsonSerializer<T> implements Serializer<T> {
+class AvroJsonSerializer<T> implements Serializer<T> {
 	
 	protected OutputStream out;
 	protected Schema schema;

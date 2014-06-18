@@ -8,7 +8,7 @@ import org.ssf4j.Deserializer;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 
-public class KryoDeserializer<T> implements Deserializer<T> {
+class KryoDeserializer<T> implements Deserializer<T> {
 
 	protected Kryo kryo;
 	protected Input in;

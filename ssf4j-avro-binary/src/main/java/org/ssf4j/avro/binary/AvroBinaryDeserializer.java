@@ -8,7 +8,7 @@ import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.reflect.ReflectDatumReader;
 import org.ssf4j.Deserializer;
 
-public class AvroBinaryDeserializer<T> implements Deserializer<T> {
+class AvroBinaryDeserializer<T> implements Deserializer<T> {
 
 	protected Class<T> type;
 	protected Decoder dec;
