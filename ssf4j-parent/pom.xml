@@ -17,6 +17,7 @@
 
 		<module>../ssf4j-avro-binary</module>
 		<module>../ssf4j-avro-json</module>
+		<module>../ssf4j-jackson</module>
 	</modules>
 	<build>
 		<pluginManagement>
