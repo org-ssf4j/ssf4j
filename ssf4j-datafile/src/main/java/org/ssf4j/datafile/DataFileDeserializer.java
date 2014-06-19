@@ -11,14 +11,14 @@ import java.util.List;
 import org.ssf4j.Deserializer;
 import org.ssf4j.Serialization;
 
-class DataFileDeserializer<T> implements Deserializer<T> {
+public class DataFileDeserializer<T> implements Deserializer<T> {
 	protected RandomAccessFile file;
 	protected List<Long> offsets;
 	protected int objPos;
 	
 	protected Deserializer<T> de;
 	
-	public DataFileDeserializer(RandomAccessFile file, Serialization serde, Class<T> type) throws IOException {
+	DataFileDeserializer(RandomAccessFile file, Serialization serde, Class<T> type) throws IOException {
 		this.file = file;
 		
 		offsets = loadOffsets();
@@ -64,5 +64,9 @@ class DataFileDeserializer<T> implements Deserializer<T> {
 	public T read(int pos) throws IOException, ClassNotFoundException {
 		file.seek(offsets.get(pos));
 		return de.read();
+	}
+	
+	public int size() {
+		return offsets.size();
 	}
 }
