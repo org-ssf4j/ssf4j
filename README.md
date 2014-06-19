@@ -14,13 +14,6 @@ To use SSF4J in your library, include the `ssf4j-api` artifact in your `pom.xml`
      <version>0.1.0</version>
     </dependency>
 
-As of this moment the project is not yet on maven central.  I'll be applying to get it on as a sonatype OSS project shortly.  Until then, you'll need to include the following repository snippet in your `pom.xml`
-
-    <repository>
-     <id>ssf4j</id>
-     <url>http://www.ssf4j.org/repo/</url>
-    </repository>
-
 ## Usage
 
 Serializing an object of type Foo:
