@@ -88,4 +88,57 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performSign</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<name>org.ssf4j:ssf4j</name>
+	<url>http://www.ssf4j.org/</url>
+	<description>Simple Serialization Facade for Java
+
+Wrapper around existing serializaiton libraries that provides a common API.  Library developers can use ssf4j to make serialization-independent libraries, where the actual serialization mechanism is supplied by the library user.
+</description>
+	<licenses>
+		<license>
+			<distribution>repo</distribution>
+			<name>BSD</name>
+			<url>http://www.ssf4j.org/wiki/index.php/Licensing:</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<email>robin.kirkman@gmail.com</email>
+			<name>Robin Kirkman</name>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git@github.com:org-ssf4j/ssf4j.git</connection>
+		<developerConnection>scm:git:git@github.com:org-ssf4j/ssf4j.git</developerConnection>
+		<url>git@github.com:org-ssf4j/ssf4j.git</url>
+	</scm>
 </project>
