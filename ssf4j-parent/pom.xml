@@ -78,7 +78,7 @@
 				<executions>
 					<execution>
 						<id>jar</id>
-						<phase>prepare-package</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>jar</goal>
 						</goals>
@@ -90,6 +90,9 @@
 							<goal>aggregate-jar</goal>
 						</goals>
 						<inherited>false</inherited>
+						<configuration>
+							<outputDirectory>${project.build.directory}/aggregate-apidocs</outputDirectory>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
