@@ -38,7 +38,7 @@ Deserializing an object of type Foo:
 
 ## Supported Serialization Mechanisms
 
-* JDK
+### JDK
 
 JDK serialization is the JRE's built-in serialization mechanism.  It can only serialize objects that implement java.io.Serializable
 
@@ -48,7 +48,7 @@ JDK serialization is the JRE's built-in serialization mechanism.  It can only se
      <version>0.1.0</version>
     </dependency>
 
-* [Kryo](https://github.com/EsotericSoftware/kryo)
+### [Kryo](https://github.com/EsotericSoftware/kryo)
 
 Kryo can serialize pretty much anything, and fast.
 
@@ -58,7 +58,7 @@ Kryo can serialize pretty much anything, and fast.
      <version>0.1.0</version>
     </dependency>
 
-* [avro](http://avro.apache.org) (binary/json output)
+### [avro](http://avro.apache.org) (binary/json output)
 
 Avro can only serialize objects generated from avro schemas, enums, and primitive types.
 
@@ -78,7 +78,7 @@ For JSON encoding:
      <version>0.1.0</version>
     </dependency>
 
-* [Jackson](http://wiki.fasterxml.com/JacksonHome)
+### [Jackson](http://wiki.fasterxml.com/JacksonHome)
 
 Jackson can serialize most things, but fails on a few cases.
 
@@ -88,7 +88,7 @@ Jackson can serialize most things, but fails on a few cases.
      <version>0.1.0</version>
     </dependency>
 
-* [Purple Jrank](http://www.purplejrank.org)
+### [Purple Jrank](http://www.purplejrank.org)
 
 Purple Jrank can serialize anything the JDK can serialize.
 
@@ -98,7 +98,7 @@ Purple Jrank can serialize anything the JDK can serialize.
      <version>0.1.0</version>
     </dependency>
 
-* [XStream](http://xstream.codehaus.org)
+### [XStream](http://xstream.codehaus.org)
 
 XStream can serialize pretty much anything.
 
