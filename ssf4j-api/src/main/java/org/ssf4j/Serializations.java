@@ -30,6 +30,10 @@ public class Serializations {
 	 * Purple Jrank, binary output format
 	 */
 	public static final String PURPLEJRANK = "org.ssf4j.purplejrank.PurpleJrankSerialization";
+	/**
+	 * XStream, XML output format
+	 */
+	public static final String XSTREAM = "org.ssf4j.xstream.XStreamSerialization";
 	
 	/**
 	 * Create a new {@link Serialization} instance from the argument classname
