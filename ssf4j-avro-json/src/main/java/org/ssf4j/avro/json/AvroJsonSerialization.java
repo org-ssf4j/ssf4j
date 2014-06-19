@@ -12,6 +12,9 @@ import org.ssf4j.Serializer;
 
 /**
  * Serialization facade that uses Apache avro's JSON encoder
+ * <p/>
+ * Note that avro can only reliably serialize objects created from
+ * avro schemas.
  * @author robin
  *
  */

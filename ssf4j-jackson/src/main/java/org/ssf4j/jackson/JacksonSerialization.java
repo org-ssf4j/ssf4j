@@ -9,7 +9,9 @@ import org.ssf4j.Serialization;
 import org.ssf4j.Serializer;
 
 /**
- * Serialization facade that uses Jackson's JSON mapper
+ * Serialization facade that uses Jackson's JSON mapper.
+ * <p/>
+ * Jackson cannot serialize everything, but comes pretty close.
  * @author robin
  *
  */

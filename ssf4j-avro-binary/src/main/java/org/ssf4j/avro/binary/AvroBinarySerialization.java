@@ -9,7 +9,10 @@ import org.ssf4j.Serialization;
 import org.ssf4j.Serializer;
 
 /**
- * Serialization facade that uses Apache avro's binary encoder
+ * Serialization facade that uses Apache avro's binary encoder.
+ * <p/>
+ * Note that avro can only reliably serialize objects created from
+ * avro schemas.
  * @author robin
  *
  */
