@@ -49,4 +49,6 @@ public class Serializations {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	private Serializations() {}
 }
