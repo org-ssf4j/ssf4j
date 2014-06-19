@@ -62,11 +62,15 @@ Kryo can serialize pretty much anything, and fast.
 
 Avro can only serialize objects generated from avro schemas, enums, and primitive types.
 
+For binary encoding:
+
     <dependency>
      <groupId>org.ssf4j</groupId>
      <artifactId>ssf4j-avro-binary</artifactId>
      <version>0.1.0</version>
     </dependency>
+
+For JSON encoding:
 
     <dependency>
      <groupId>org.ssf4j</groupId>
