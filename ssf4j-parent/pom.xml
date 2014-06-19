@@ -20,6 +20,7 @@
 		<module>../ssf4j-jackson</module>
 		<module>../ssf4j-purplejrank</module>
 		<module>../ssf4j-xstream</module>
+		<module>../ssf4j-datafile</module>
 	</modules>
 	<build>
 		<pluginManagement>
