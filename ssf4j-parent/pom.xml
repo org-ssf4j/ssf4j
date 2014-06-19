@@ -84,17 +84,6 @@
 							<goal>jar</goal>
 						</goals>
 					</execution>
-					<execution>
-						<id>aggregate-jar</id>
-						<phase>package</phase>
-						<goals>
-							<goal>aggregate-jar</goal>
-						</goals>
-						<inherited>false</inherited>
-						<configuration>
-							<outputDirectory>${project.build.directory}/aggregate-apidocs</outputDirectory>
-						</configuration>
-					</execution>
 				</executions>
 			</plugin>
 		</plugins>
