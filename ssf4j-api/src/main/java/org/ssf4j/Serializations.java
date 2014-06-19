@@ -45,6 +45,7 @@ public class Serializations {
 	 * @see #JDK
 	 * @see #KRYO
 	 * @see #PURPLEJRANK
+	 * @see #XSTREAM
 	 */
 	public static Serialization get(String name) {
 		try {
