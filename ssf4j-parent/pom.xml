@@ -78,7 +78,7 @@
 				<executions>
 					<execution>
 						<id>jar</id>
-						<phase>package</phase>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>jar</goal>
 						</goals>
