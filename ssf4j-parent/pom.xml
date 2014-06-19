@@ -19,6 +19,7 @@
 		<module>../ssf4j-avro-json</module>
 		<module>../ssf4j-jackson</module>
 		<module>../ssf4j-purplejrank</module>
+		<module>../ssf4j-xstream</module>
 	</modules>
 	<build>
 		<pluginManagement>
