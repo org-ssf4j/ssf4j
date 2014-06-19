@@ -8,14 +8,25 @@ import org.ssf4j.Deserializer;
 import org.ssf4j.Serialization;
 import org.ssf4j.Serializer;
 
+/**
+ * Serialization facade that uses Jackson's JSON mapper
+ * @author robin
+ *
+ */
 public class JacksonSerialization implements Serialization {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type)
 			throws IOException {
 		return new JacksonSerializer<T>(out);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type)
 			throws IOException {
