@@ -18,7 +18,7 @@ As of this moment the project is not yet on maven central.  I'll be applying to 
 
     <repository>
      <id>ssf4j</id>
-     <url>http://vps.robinvps.com:8888/plugin/repository/everything/</url>
+     <url>http://www.ssf4j.org/repo/</url>
     </repository>
 
 ## Usage
