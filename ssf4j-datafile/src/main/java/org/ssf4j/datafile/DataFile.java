@@ -28,7 +28,7 @@ public class DataFile implements Serialization {
 	}
 
 	@Override
-	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type)
+	public <T> DataFileDeserializer<T> newDeserializer(InputStream in, Class<T> type)
 			throws IOException {
 		return new DataFileDeserializer<T>(new RandomAccessFile(file, "r"), serde, type);
 	}
