@@ -29,4 +29,10 @@ public class DataFile<T> {
 		return new DataFileDeserializer<T>(new RandomAccessFile(file, "r"), serde, type);
 	}
 
+	public MappedDataFileDeserializer<T> newMappedDeserializer()
+			throws IOException {
+		return new MappedDataFileDeserializer<T>(new RandomAccessFile(file, "r"), serde, type);
+	}
+
+	
 }
