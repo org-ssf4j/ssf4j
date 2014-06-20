@@ -22,7 +22,7 @@ public class AvroBinarySerialization implements Serialization {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type)
+	public <T> AvroBinarySerializer<T> newSerializer(OutputStream out, Class<T> type)
 			throws IOException {
 		return new AvroBinarySerializer<T>(type, out);
 	}
@@ -31,7 +31,7 @@ public class AvroBinarySerialization implements Serialization {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type)
+	public <T> AvroBinaryDeserializer<T> newDeserializer(InputStream in, Class<T> type)
 			throws IOException {
 		return new AvroBinaryDeserializer<T>(type, in);
 	}

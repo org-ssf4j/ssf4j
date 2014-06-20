@@ -54,7 +54,7 @@ public class AvroJsonSerialization implements Serialization {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type)
+	public <T> AvroJsonSerializer<T> newSerializer(OutputStream out, Class<T> type)
 			throws IOException {
 		return new AvroJsonSerializer<T>(schema(type), out);
 	}
@@ -63,7 +63,7 @@ public class AvroJsonSerialization implements Serialization {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type)
+	public <T> AvroJsonDeserializer<T> newDeserializer(InputStream in, Class<T> type)
 			throws IOException {
 		return new AvroJsonDeserializer<T>(schema(type), in, type);
 	}

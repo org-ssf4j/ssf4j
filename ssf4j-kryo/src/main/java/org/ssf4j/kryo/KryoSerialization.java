@@ -42,7 +42,7 @@ public class KryoSerialization implements Serialization {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type) throws IOException {
+	public <T> KryoSerializer<T> newSerializer(OutputStream out, Class<T> type) throws IOException {
 		return new KryoSerializer<T>(kryo, out);
 	}
 
@@ -50,7 +50,7 @@ public class KryoSerialization implements Serialization {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type) throws IOException {
+	public <T> KryoDeserializer<T> newDeserializer(InputStream in, Class<T> type) throws IOException {
 		return new KryoDeserializer<T>(kryo, in, type);
 	}
 

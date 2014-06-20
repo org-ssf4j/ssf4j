@@ -31,7 +31,7 @@ public class JacksonSerialization implements Serialization {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type)
+	public <T> JacksonSerializer<T> newSerializer(OutputStream out, Class<T> type)
 			throws IOException {
 		return new JacksonSerializer<T>(out, mapper);
 	}
@@ -40,7 +40,7 @@ public class JacksonSerialization implements Serialization {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type)
+	public <T> JacksonDeserializer<T> newDeserializer(InputStream in, Class<T> type)
 			throws IOException {
 		return new JacksonDeserializer<T>(in, mapper, type);
 	}

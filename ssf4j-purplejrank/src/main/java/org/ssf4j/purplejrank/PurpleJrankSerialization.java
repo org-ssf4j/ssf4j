@@ -19,7 +19,7 @@ public class PurpleJrankSerialization implements Serialization {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type)
+	public <T> PurpleJrankSerializer<T> newSerializer(OutputStream out, Class<T> type)
 			throws IOException {
 		return new PurpleJrankSerializer<T>(out);
 	}
@@ -28,7 +28,7 @@ public class PurpleJrankSerialization implements Serialization {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type)
+	public <T> PurpleJrankDeserializer<T> newDeserializer(InputStream in, Class<T> type)
 			throws IOException {
 		return new PurpleJrankDeserializer<T>(in);
 	}
