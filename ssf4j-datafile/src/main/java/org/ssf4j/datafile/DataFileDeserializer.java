@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 import org.ssf4j.Deserializer;
 import org.ssf4j.Serialization;
 
-public class DataFileDeserializer<T> implements Deserializer<T> {
+public class DataFileDeserializer<T> extends AbstractList<T> implements Deserializer<T> {
 	protected RandomAccessFile file;
 	protected List<Long> offsets;
 	protected int objPos;
@@ -68,5 +69,14 @@ public class DataFileDeserializer<T> implements Deserializer<T> {
 	
 	public int size() {
 		return offsets.size();
+	}
+
+	@Override
+	public T get(int index) {
+		try {
+			return read(index);
+		} catch(Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
