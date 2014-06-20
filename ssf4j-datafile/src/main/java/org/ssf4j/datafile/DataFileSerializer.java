@@ -22,7 +22,8 @@ public class DataFileSerializer<T> implements Serializer<T> {
 		dbuf = new DataOutputStream(buf);
 		ser = serde.newSerializer(this.out, type);
 		
-		dbuf.writeLong(-1);
+		ser.flush();
+		dbuf.writeLong(-1 - this.out.getCount());
 	}
 	
 	@Override
@@ -35,10 +36,12 @@ public class DataFileSerializer<T> implements Serializer<T> {
 		flush();
 		dbuf.flush();
 		out.write(buf.toByteArray());
+		ser.close();
 	}
 
 	@Override
 	public void write(T object) throws IOException {
+		flush();
 		dbuf.writeLong(out.getCount());
 		ser.write(object);
 	}

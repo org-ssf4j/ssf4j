@@ -9,24 +9,24 @@ import java.io.RandomAccessFile;
 
 import org.ssf4j.Serialization;
 
-public class DataFile implements Serialization {
+public class DataFile<T> {
 
 	protected File file;
 	protected Serialization serde;
+	protected Class<T> type;
 	
-	public DataFile(File file, Serialization serde) {
+	public DataFile(File file, Serialization serde, Class<T> type) {
 		this.file = file;
 		this.serde = serde;
+		this.type = type;
 	}
 	
-	@Override
-	public <T> DataFileSerializer<T> newSerializer(OutputStream out, Class<T> type)
+	public DataFileSerializer<T> newSerializer()
 			throws IOException {
 		return new DataFileSerializer<T>(new FileOutputStream(file), serde, type);
 	}
 
-	@Override
-	public <T> DataFileDeserializer<T> newDeserializer(InputStream in, Class<T> type)
+	public DataFileDeserializer<T> newDeserializer()
 			throws IOException {
 		return new DataFileDeserializer<T>(new RandomAccessFile(file, "r"), serde, type);
 	}

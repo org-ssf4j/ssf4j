@@ -25,7 +25,8 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 		
 		offsets = loadOffsets();
 		
-		file.seek(0);
+		file.seek(-1 - offsets.get(0));
+		offsets.remove(0);
 		
 		de = serde.newDeserializer(new RandomAccessFileInputStream(file), type);
 	}
@@ -48,7 +49,6 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 			file.seek(file.getFilePointer() - 8);
 		} while(pos >= 0);
 		
-		ret.remove(ret.size() - 1); // remove trailing negative offset
 		Collections.reverse(ret);
 		return ret;
 	}
@@ -64,6 +64,8 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 	}
 	
 	public T read(int pos) throws IOException {
+		if(pos < 0 || pos >= size())
+			throw new IndexOutOfBoundsException();
 		file.seek(offsets.get(pos));
 		return de.read();
 	}
@@ -72,6 +74,10 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 		return offsets.size();
 	}
 
+	public void seek(int objPos) {
+		this.objPos = objPos;
+	}
+	
 	@Override
 	public T get(int index) {
 		try {
