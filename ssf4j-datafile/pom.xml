@@ -6,7 +6,7 @@
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-api</artifactId>
-			<version>0.2.1</version>
+			<version>0.2.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -17,57 +17,57 @@
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-api</artifactId>
-			<version>0.2.1</version>
+			<version>0.2.2-SNAPSHOT</version>
 			<classifier>tests</classifier>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-avro-binary</artifactId>
-			<version>0.2.1</version>
+			<version>0.2.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-avro-json</artifactId>
-			<version>0.2.1</version>
+			<version>0.2.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-jackson</artifactId>
-			<version>0.2.1</version>
+			<version>0.2.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-jdk</artifactId>
-			<version>0.2.1</version>
+			<version>0.2.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-kryo</artifactId>
-			<version>0.2.1</version>
+			<version>0.2.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-purplejrank</artifactId>
-			<version>0.2.1</version>
+			<version>0.2.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-xstream</artifactId>
-			<version>0.2.1</version>
+			<version>0.2.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>org.ssf4j</groupId>
 		<artifactId>ssf4j-parent</artifactId>
-		<version>0.2.1</version>
+		<version>0.2.2-SNAPSHOT</version>
 		<relativePath>../ssf4j-parent</relativePath>
 	</parent>
 </project>
