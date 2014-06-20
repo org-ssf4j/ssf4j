@@ -8,7 +8,7 @@ import org.ssf4j.Serializer;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Output;
 
-class KryoSerializer<T> implements Serializer<T> {
+public class KryoSerializer<T> implements Serializer<T> {
 
 	protected Kryo kryo;
 	protected Output out;

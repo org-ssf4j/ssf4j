@@ -8,7 +8,7 @@ import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.reflect.ReflectDatumWriter;
 import org.ssf4j.Serializer;
 
-class AvroBinarySerializer<T> implements Serializer<T> {
+public class AvroBinarySerializer<T> implements Serializer<T> {
 	
 	protected OutputStream out;
 	protected Class<T> type;

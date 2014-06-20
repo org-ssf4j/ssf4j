@@ -7,7 +7,7 @@ import org.ssf4j.Serializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-class JacksonSerializer<T> implements Serializer<T> {
+public class JacksonSerializer<T> implements Serializer<T> {
 
 	protected OutputStream out;
 	protected ObjectMapper mapper;

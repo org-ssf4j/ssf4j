@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import org.purplejrank.PurpleJrankInput;
 import org.ssf4j.Deserializer;
 
-class PurpleJrankDeserializer<T> implements Deserializer<T> {
+public class PurpleJrankDeserializer<T> implements Deserializer<T> {
 	protected ObjectInputStream in;
 	
 	public PurpleJrankDeserializer(InputStream in) throws IOException {

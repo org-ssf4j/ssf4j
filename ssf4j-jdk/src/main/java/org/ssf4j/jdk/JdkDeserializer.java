@@ -6,7 +6,7 @@ import java.io.ObjectInputStream;
 
 import org.ssf4j.Deserializer;
 
-class JdkDeserializer<T> implements Deserializer<T> {
+public class JdkDeserializer<T> implements Deserializer<T> {
 	protected ObjectInputStream in;
 	
 	public JdkDeserializer(InputStream in) throws IOException {

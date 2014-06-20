@@ -6,7 +6,7 @@ import java.io.OutputStream;
 
 import org.ssf4j.Serializer;
 
-class JdkSerializer<T> implements Serializer<T> {
+public class JdkSerializer<T> implements Serializer<T> {
 	protected ObjectOutputStream out;
 	
 	public JdkSerializer(OutputStream out) throws IOException {

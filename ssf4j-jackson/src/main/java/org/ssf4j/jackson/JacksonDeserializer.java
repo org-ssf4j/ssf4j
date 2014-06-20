@@ -7,7 +7,7 @@ import org.ssf4j.Deserializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-class JacksonDeserializer<T> implements Deserializer<T> {
+public class JacksonDeserializer<T> implements Deserializer<T> {
 
 	protected InputStream in;
 	protected Class<T> type;

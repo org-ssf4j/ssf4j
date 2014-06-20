@@ -10,7 +10,7 @@ import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.ssf4j.Deserializer;
 
-class AvroJsonDeserializer<T> implements Deserializer<T> {
+public class AvroJsonDeserializer<T> implements Deserializer<T> {
 
 	protected Schema schema;
 	protected Class<T> type;

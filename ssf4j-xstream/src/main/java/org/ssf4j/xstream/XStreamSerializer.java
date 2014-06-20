@@ -7,7 +7,7 @@ import org.ssf4j.Serializer;
 
 import com.thoughtworks.xstream.XStream;
 
-class XStreamSerializer<T> implements Serializer<T> {
+public class XStreamSerializer<T> implements Serializer<T> {
 
 	protected XStream xstream;
 	protected OutputStream out;

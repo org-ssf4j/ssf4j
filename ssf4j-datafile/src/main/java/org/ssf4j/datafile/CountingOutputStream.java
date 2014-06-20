@@ -3,7 +3,7 @@ package org.ssf4j.datafile;
 import java.io.IOException;
 import java.io.OutputStream;
 
-class CountingOutputStream extends OutputStream {
+public class CountingOutputStream extends OutputStream {
 	protected OutputStream wrapped;
 	protected long count;
 	

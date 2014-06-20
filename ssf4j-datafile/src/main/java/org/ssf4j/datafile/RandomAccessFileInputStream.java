@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 
-class RandomAccessFileInputStream extends InputStream {
+public class RandomAccessFileInputStream extends InputStream {
 
 	protected RandomAccessFile file;
 	

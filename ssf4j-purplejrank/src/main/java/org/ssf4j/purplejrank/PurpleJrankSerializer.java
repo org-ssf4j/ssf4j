@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import org.purplejrank.PurpleJrankOutput;
 import org.ssf4j.Serializer;
 
-class PurpleJrankSerializer<T> implements Serializer<T> {
+public class PurpleJrankSerializer<T> implements Serializer<T> {
 	protected ObjectOutputStream out;
 	
 	public PurpleJrankSerializer(OutputStream out) throws IOException {
