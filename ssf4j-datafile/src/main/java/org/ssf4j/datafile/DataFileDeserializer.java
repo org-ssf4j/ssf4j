@@ -18,7 +18,7 @@ public class DataFileDeserializer<T> implements Deserializer<T> {
 	
 	protected Deserializer<T> de;
 	
-	DataFileDeserializer(RandomAccessFile file, Serialization serde, Class<T> type) throws IOException {
+	public DataFileDeserializer(RandomAccessFile file, Serialization serde, Class<T> type) throws IOException {
 		this.file = file;
 		
 		offsets = loadOffsets();

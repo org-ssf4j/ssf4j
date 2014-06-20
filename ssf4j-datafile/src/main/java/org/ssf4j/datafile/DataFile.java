@@ -22,7 +22,7 @@ public class DataFile implements Serialization {
 	}
 	
 	@Override
-	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type)
+	public <T> DataFileSerializer<T> newSerializer(OutputStream out, Class<T> type)
 			throws IOException {
 		return new DataFileSerializer<T>(new FileOutputStream(file), serde, type);
 	}

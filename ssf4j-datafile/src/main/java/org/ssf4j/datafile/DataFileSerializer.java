@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import org.ssf4j.Serialization;
 import org.ssf4j.Serializer;
 
-class DataFileSerializer<T> implements Serializer<T> {
+public class DataFileSerializer<T> implements Serializer<T> {
 	
 	protected CountingOutputStream out;
 	protected ByteArrayOutputStream buf;
