@@ -8,6 +8,8 @@ import org.ssf4j.Deserializer;
 import org.ssf4j.Serialization;
 import org.ssf4j.Serializer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Serialization facade that uses Jackson's JSON mapper.
  * <p/>
@@ -17,13 +19,21 @@ import org.ssf4j.Serializer;
  */
 public class JacksonSerialization implements Serialization {
 
+	protected ObjectMapper mapper;
+	
+	public JacksonSerialization() {}
+	
+	public JacksonSerialization(ObjectMapper mapper) {
+		this.mapper = mapper;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type)
 			throws IOException {
-		return new JacksonSerializer<T>(out);
+		return new JacksonSerializer<T>(out, mapper);
 	}
 
 	/**
@@ -32,7 +42,7 @@ public class JacksonSerialization implements Serialization {
 	@Override
 	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type)
 			throws IOException {
-		return new JacksonDeserializer<T>(in, type);
+		return new JacksonDeserializer<T>(in, mapper, type);
 	}
 
 }

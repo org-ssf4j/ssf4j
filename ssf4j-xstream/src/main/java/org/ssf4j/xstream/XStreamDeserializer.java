@@ -20,7 +20,7 @@ public class XStreamDeserializer<T> implements Deserializer<T> {
 	}
 	
 	@Override
-	public T read() throws IOException, ClassNotFoundException {
+	public T read() throws IOException {
 		return type.cast(xstream.fromXML(in));
 	}
 

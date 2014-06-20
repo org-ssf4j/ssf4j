@@ -16,8 +16,12 @@ public class PurpleJrankDeserializer<T> implements Deserializer<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public T read() throws IOException, ClassNotFoundException {
-		return (T) in.readObject();
+	public T read() throws IOException {
+		try {
+			return (T) in.readObject();
+		} catch(ClassNotFoundException e) {
+			throw new IOException(e);
+		}
 	}
 
 	@Override

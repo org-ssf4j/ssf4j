@@ -31,4 +31,16 @@ public class CountingOutputStream extends OutputStream {
 		wrapped.close();
 	}
 
+	@Override
+	public void write(byte[] b) throws IOException {
+		wrapped.write(b);
+		count += b.length;
+	}
+
+	@Override
+	public void write(byte[] b, int off, int len) throws IOException {
+		wrapped.write(b, off, len);
+		count += len;
+	}
+
 }

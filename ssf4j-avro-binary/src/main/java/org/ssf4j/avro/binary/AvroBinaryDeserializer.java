@@ -21,7 +21,7 @@ public class AvroBinaryDeserializer<T> implements Deserializer<T> {
 	}
 	
 	@Override
-	public T read() throws IOException, ClassNotFoundException {
+	public T read() throws IOException {
 		if(type == null)
 			throw new UnsupportedOperationException();
 		return new ReflectDatumReader<T>(type).read(null, dec);

@@ -1,5 +1,8 @@
 package org.ssf4j;
 
+import java.lang.reflect.Constructor;
+import java.util.List;
+
 /**
  * Factory class that returns new instances of various known {@link Serialization}s
  * @author robin
@@ -47,11 +50,12 @@ public class Serializations {
 	 * @see #PURPLEJRANK
 	 * @see #XSTREAM
 	 */
-	public static Serialization get(String name) {
+	public static Serialization get(final String name) {
 		try {
-			return Class.forName(name).asSubclass(Serialization.class).newInstance();
+			Class<? extends Serialization> serdec = Class.forName(name).asSubclass(Serialization.class);
+			return serdec.newInstance();
 		} catch(Exception e) {
-			throw new RuntimeException(e);
+			throw Exceptions.runtime(e);
 		}
 	}
 	

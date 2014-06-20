@@ -21,6 +21,12 @@
 			<classifier>tests</classifier>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.ssf4j</groupId>
+			<artifactId>ssf4j-kryo</artifactId>
+			<version>0.1.1-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>org.ssf4j</groupId>

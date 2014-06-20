@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.ssf4j.Deserializer;
+import org.ssf4j.Exceptions;
 import org.ssf4j.Serialization;
 
 public class DataFileDeserializer<T> extends AbstractList<T> implements Deserializer<T> {
@@ -58,11 +59,11 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 	}
 
 	@Override
-	public T read() throws IOException, ClassNotFoundException {
+	public T read() throws IOException {
 		return read(objPos++);
 	}
 	
-	public T read(int pos) throws IOException, ClassNotFoundException {
+	public T read(int pos) throws IOException {
 		file.seek(offsets.get(pos));
 		return de.read();
 	}
@@ -76,7 +77,7 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 		try {
 			return read(index);
 		} catch(Exception e) {
-			throw new RuntimeException(e);
+			throw Exceptions.runtime(e);
 		}
 	}
 }
