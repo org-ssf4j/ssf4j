@@ -56,6 +56,17 @@ public class DataFileTest {
 			de.seek(4);
 			Assert.assertEquals(4, (int) de.read());
 			Assert.assertEquals(3, (int) de.read(3));
+			de.close();
+			
+			MappedDataFileDeserializer<Integer> mde = df.newMappedDeserializer();
+			mde.load();
+			Assert.assertEquals(0, (int) mde.read());
+			Assert.assertEquals(1, (int) mde.read());
+			Assert.assertEquals(2, (int) mde.read());
+			mde.seek(4);
+			Assert.assertEquals(4, (int) mde.read());
+			Assert.assertEquals(3, (int) mde.read(3));
+			mde.close();
 			
 			f.delete();
 		} finally {
