@@ -6,9 +6,7 @@ import java.io.OutputStream;
 
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
-import org.ssf4j.Deserializer;
 import org.ssf4j.Serialization;
-import org.ssf4j.Serializer;
 
 /**
  * Serialization facade that uses Apache avro's JSON encoder

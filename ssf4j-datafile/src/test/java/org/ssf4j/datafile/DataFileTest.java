@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.ssf4j.Deserializer;
 import org.ssf4j.Serializations;
 import org.ssf4j.Serializer;
 import org.ssf4j.datafile.DataFile;

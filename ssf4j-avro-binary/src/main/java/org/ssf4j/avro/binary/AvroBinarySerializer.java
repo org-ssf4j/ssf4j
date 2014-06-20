@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import org.apache.avro.Schema;
 import org.apache.avro.io.Encoder;
 import org.apache.avro.io.EncoderFactory;
-import org.apache.avro.reflect.ReflectDatumWriter;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.ssf4j.Serializer;
 
