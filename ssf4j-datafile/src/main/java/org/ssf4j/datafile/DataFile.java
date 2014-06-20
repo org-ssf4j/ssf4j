@@ -7,9 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 
-import org.ssf4j.Deserializer;
 import org.ssf4j.Serialization;
-import org.ssf4j.Serializer;
 
 public class DataFile implements Serialization {
 
