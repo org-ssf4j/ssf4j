@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import org.purplejrank.PurpleJrankInput;
 import org.ssf4j.Deserializer;
 
-class PurpleJrankDeserializer<T> implements Deserializer<T> {
+public class PurpleJrankDeserializer<T> implements Deserializer<T> {
 	protected ObjectInputStream in;
 	
 	public PurpleJrankDeserializer(InputStream in) throws IOException {
@@ -16,8 +16,12 @@ class PurpleJrankDeserializer<T> implements Deserializer<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public T read() throws IOException, ClassNotFoundException {
-		return (T) in.readObject();
+	public T read() throws IOException {
+		try {
+			return (T) in.readObject();
+		} catch(ClassNotFoundException e) {
+			throw new IOException(e);
+		}
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import org.ssf4j.Deserializer;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 
-class KryoDeserializer<T> implements Deserializer<T> {
+public class KryoDeserializer<T> implements Deserializer<T> {
 
 	protected Kryo kryo;
 	protected Input in;
@@ -21,7 +21,7 @@ class KryoDeserializer<T> implements Deserializer<T> {
 	}
 	
 	@Override
-	public T read() throws IOException, ClassNotFoundException {
+	public T read() throws IOException {
 		return kryo.readObject(in, type);
 	}
 

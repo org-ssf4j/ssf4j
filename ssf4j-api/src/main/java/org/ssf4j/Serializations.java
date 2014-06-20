@@ -47,11 +47,12 @@ public class Serializations {
 	 * @see #PURPLEJRANK
 	 * @see #XSTREAM
 	 */
-	public static Serialization get(String name) {
+	public static Serialization get(final String name) {
 		try {
-			return Class.forName(name).asSubclass(Serialization.class).newInstance();
+			Class<? extends Serialization> serdec = Class.forName(name).asSubclass(Serialization.class);
+			return serdec.newInstance();
 		} catch(Exception e) {
-			throw new RuntimeException(e);
+			throw Exceptions.runtime(e);
 		}
 	}
 	

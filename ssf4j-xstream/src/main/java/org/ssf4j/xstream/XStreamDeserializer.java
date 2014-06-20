@@ -7,7 +7,7 @@ import org.ssf4j.Deserializer;
 
 import com.thoughtworks.xstream.XStream;
 
-class XStreamDeserializer<T> implements Deserializer<T> {
+public class XStreamDeserializer<T> implements Deserializer<T> {
 
 	protected XStream xstream;
 	protected Class<T> type;
@@ -20,7 +20,7 @@ class XStreamDeserializer<T> implements Deserializer<T> {
 	}
 	
 	@Override
-	public T read() throws IOException, ClassNotFoundException {
+	public T read() throws IOException {
 		return type.cast(xstream.fromXML(in));
 	}
 

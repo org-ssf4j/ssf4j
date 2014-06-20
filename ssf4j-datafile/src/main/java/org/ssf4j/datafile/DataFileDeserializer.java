@@ -1,0 +1,93 @@
+package org.ssf4j.datafile;
+
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.ssf4j.Deserializer;
+import org.ssf4j.Exceptions;
+import org.ssf4j.Serialization;
+
+public class DataFileDeserializer<T> extends AbstractList<T> implements Deserializer<T> {
+	protected RandomAccessFile file;
+	protected Serialization serde;
+	protected Class<T> type;
+	
+	protected List<Long> offsets;
+	protected int objPos;
+
+	public DataFileDeserializer(RandomAccessFile file, Serialization serde, Class<T> type) throws IOException {
+		this.file = file;
+		this.serde = serde;
+		this.type = type;
+		
+		offsets = loadOffsets();
+	}
+	
+	protected List<Long> loadOffsets() throws IOException {
+		List<Long> ret = new ArrayList<Long>();
+		
+		byte[] b = new byte[8];
+		file.seek(file.length());
+		ByteArrayInputStream buf = new ByteArrayInputStream(b);
+		DataInputStream dbuf = new DataInputStream(buf);
+		
+		long pos;
+		
+		do {
+			file.seek(file.getFilePointer() - 8);
+			file.readFully(b);
+			buf.reset();
+			ret.add(pos = dbuf.readLong());
+			file.seek(file.getFilePointer() - 8);
+		} while(pos >= 0);
+
+		ret.remove(ret.size()-1);
+		Collections.reverse(ret);
+		ret.add(file.getFilePointer());
+		return ret;
+	}
+
+	@Override
+	public void close() throws IOException {
+		file.close();
+	}
+
+	@Override
+	public T read() throws IOException {
+		return read(objPos++);
+	}
+	
+	public T read(int pos) throws IOException {
+		if(pos < 0 || pos >= size())
+			throw new IndexOutOfBoundsException();
+		long start = offsets.get(pos);
+		long length = offsets.get(pos+1) - start;
+		file.seek(start);
+		
+		Deserializer<T> de = serde.newDeserializer(new RandomAccessFileInputStream(file, length), type);
+		return de.read();
+	}
+	
+	public int size() {
+		return offsets.size() - 1;
+	}
+
+	public void seek(int objPos) {
+		this.objPos = objPos;
+	}
+	
+	@Override
+	public T get(int index) {
+		try {
+			return read(index);
+		} catch(Exception e) {
+			throw Exceptions.runtime(e);
+		}
+	}
+}

@@ -16,5 +16,5 @@ public interface Deserializer<T> extends Closeable {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	public T read() throws IOException, ClassNotFoundException;
+	public T read() throws IOException;
 }

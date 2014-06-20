@@ -7,14 +7,14 @@ import org.ssf4j.Serializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-class JacksonSerializer<T> implements Serializer<T> {
+public class JacksonSerializer<T> implements Serializer<T> {
 
 	protected OutputStream out;
 	protected ObjectMapper mapper;
 	
-	public JacksonSerializer(OutputStream out) throws IOException {
+	public JacksonSerializer(OutputStream out, ObjectMapper mapper) throws IOException {
 		this.out = out;
-		mapper = new ObjectMapper();
+		this.mapper = mapper != null ? mapper : new ObjectMapper();
 	}
 	
 	@Override

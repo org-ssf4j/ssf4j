@@ -6,7 +6,7 @@ import java.io.ObjectInputStream;
 
 import org.ssf4j.Deserializer;
 
-class JdkDeserializer<T> implements Deserializer<T> {
+public class JdkDeserializer<T> implements Deserializer<T> {
 	protected ObjectInputStream in;
 	
 	public JdkDeserializer(InputStream in) throws IOException {
@@ -15,8 +15,12 @@ class JdkDeserializer<T> implements Deserializer<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public T read() throws IOException, ClassNotFoundException {
-		return (T) in.readObject();
+	public T read() throws IOException {
+		try{
+			return (T) in.readObject();
+		} catch(ClassNotFoundException e) {
+			throw new IOException(e);
+		}
 	}
 
 	@Override

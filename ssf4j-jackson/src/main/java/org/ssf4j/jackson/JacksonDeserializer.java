@@ -7,16 +7,16 @@ import org.ssf4j.Deserializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-class JacksonDeserializer<T> implements Deserializer<T> {
+public class JacksonDeserializer<T> implements Deserializer<T> {
 
 	protected InputStream in;
 	protected Class<T> type;
 	protected ObjectMapper mapper;
 	
-	public JacksonDeserializer(InputStream in, Class<T> type) {
+	public JacksonDeserializer(InputStream in, ObjectMapper mapper, Class<T> type) {
 		this.in = in;
 		this.type = type;
-		mapper = new ObjectMapper();
+		this.mapper = mapper != null ? mapper : new ObjectMapper();
 	}
 	
 	@Override
@@ -25,7 +25,7 @@ class JacksonDeserializer<T> implements Deserializer<T> {
 	}
 
 	@Override
-	public T read() throws IOException, ClassNotFoundException {
+	public T read() throws IOException {
 		return mapper.readValue(in, type);
 	}
 
