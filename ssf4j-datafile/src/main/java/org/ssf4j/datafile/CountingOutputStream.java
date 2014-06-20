@@ -17,20 +17,6 @@ public class CountingOutputStream extends OutputStream {
 		count++;
 	}
 	
-	public long getCount() {
-		return count;
-	}
-	
-	@Override
-	public void flush() throws IOException {
-		wrapped.flush();
-	}
-	
-	@Override
-	public void close() throws IOException {
-		wrapped.close();
-	}
-
 	@Override
 	public void write(byte[] b) throws IOException {
 		wrapped.write(b);
@@ -41,6 +27,23 @@ public class CountingOutputStream extends OutputStream {
 	public void write(byte[] b, int off, int len) throws IOException {
 		wrapped.write(b, off, len);
 		count += len;
+	}
+
+	@Override
+	public void flush() throws IOException {
+		wrapped.flush();
+	}
+	
+	/**
+	 * Doesn't close the underlying stream!
+	 */
+	@Override
+	public void close() throws IOException {
+		// NOP
+	}
+
+	public long getCount() {
+		return count;
 	}
 
 }

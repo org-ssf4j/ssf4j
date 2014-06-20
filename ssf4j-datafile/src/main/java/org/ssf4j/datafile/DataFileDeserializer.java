@@ -15,20 +15,18 @@ import org.ssf4j.Serialization;
 
 public class DataFileDeserializer<T> extends AbstractList<T> implements Deserializer<T> {
 	protected RandomAccessFile file;
+	protected Serialization serde;
+	protected Class<T> type;
+	
 	protected List<Long> offsets;
 	protected int objPos;
-	
-	protected Deserializer<T> de;
-	
+
 	public DataFileDeserializer(RandomAccessFile file, Serialization serde, Class<T> type) throws IOException {
 		this.file = file;
+		this.serde = serde;
+		this.type = type;
 		
 		offsets = loadOffsets();
-		
-		file.seek(-1 - offsets.get(0));
-		offsets.remove(0);
-		
-		de = serde.newDeserializer(new RandomAccessFileInputStream(file), type);
 	}
 	
 	protected List<Long> loadOffsets() throws IOException {
@@ -48,8 +46,10 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 			ret.add(pos = dbuf.readLong());
 			file.seek(file.getFilePointer() - 8);
 		} while(pos >= 0);
-		
+
+		ret.remove(ret.size()-1);
 		Collections.reverse(ret);
+		ret.add(file.getFilePointer());
 		return ret;
 	}
 
@@ -66,12 +66,16 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 	public T read(int pos) throws IOException {
 		if(pos < 0 || pos >= size())
 			throw new IndexOutOfBoundsException();
-		file.seek(offsets.get(pos));
+		long start = offsets.get(pos);
+		long length = offsets.get(pos+1) - start;
+		file.seek(start);
+		
+		Deserializer<T> de = serde.newDeserializer(new RandomAccessFileInputStream(file, length), type);
 		return de.read();
 	}
 	
 	public int size() {
-		return offsets.size();
+		return offsets.size() - 1;
 	}
 
 	public void seek(int objPos) {

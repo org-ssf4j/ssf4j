@@ -7,24 +7,40 @@ import java.io.RandomAccessFile;
 public class RandomAccessFileInputStream extends InputStream {
 
 	protected RandomAccessFile file;
+	protected long length;
 	
-	public RandomAccessFileInputStream(RandomAccessFile file) {
+	public RandomAccessFileInputStream(RandomAccessFile file, long length) {
 		this.file = file;
+		this.length = length;
 	}
 	
 	@Override
 	public int read() throws IOException {
+		if(length == 0)
+			return -1;
+		length--;
 		return file.read();
+		
 	}
 
 	@Override
 	public int read(byte[] b) throws IOException {
-		return file.read(b);
+		if(length == 0)
+			return -1;
+		int r = file.read(b, 0, Math.min(b.length, (int) length));
+		if(r > 0)
+			length -= r;
+		return r;
 	}
 
 	@Override
 	public int read(byte[] b, int off, int len) throws IOException {
-		return file.read(b, off, len);
+		if(length == 0)
+			return -1;
+		int r = file.read(b, off, Math.min(len, (int) length));
+		if(r > 0)
+			length -= r;
+		return r;
 	}
 
 }

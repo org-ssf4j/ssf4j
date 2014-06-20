@@ -10,40 +10,47 @@ import org.ssf4j.Serializer;
 
 public class DataFileSerializer<T> implements Serializer<T> {
 	
-	protected CountingOutputStream out;
+	protected OutputStream out;
+	protected Serialization serde;
+	protected Class<T> type;
+	
+	protected CountingOutputStream cout;
 	protected ByteArrayOutputStream buf;
 	protected DataOutputStream dbuf;
-	protected Serializer<T> ser;
+	
 	
 	public DataFileSerializer(OutputStream out, Serialization serde, Class<T> type) throws IOException {
-		this.out = new CountingOutputStream(out);
+		this.out = out;
+		this.serde = serde;
+		this.type = type;
 		
+		cout = new CountingOutputStream(out);
 		buf = new ByteArrayOutputStream();
 		dbuf = new DataOutputStream(buf);
-		ser = serde.newSerializer(this.out, type);
-		
-		ser.flush();
-		dbuf.writeLong(-1 - this.out.getCount());
+		dbuf.writeLong(-1 - this.cout.getCount());
 	}
 	
 	@Override
 	public void flush() throws IOException {
-		ser.flush();
+		cout.flush();
 	}
 
 	@Override
 	public void close() throws IOException {
 		flush();
 		dbuf.flush();
-		out.write(buf.toByteArray());
-		ser.close();
+		cout.write(buf.toByteArray());
+		cout.flush();
+		out.close();
 	}
 
 	@Override
 	public void write(T object) throws IOException {
 		flush();
-		dbuf.writeLong(out.getCount());
+		dbuf.writeLong(cout.getCount());
+		Serializer<T> ser = serde.newSerializer(this.cout, type);
 		ser.write(object);
+		ser.close();
 	}
 
 }
