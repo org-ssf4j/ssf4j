@@ -40,7 +40,7 @@ public class ImmutableListCacheTest {
 	
 	@Test
 	public void testCache() throws Exception {
-		int NUM = 1024;
+		int NUM = 64;
 		int SIZE = 8 * 1024 * 1024;
 		int BT = 8;
 		
