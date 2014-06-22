@@ -62,4 +62,27 @@ public class DataFileTest {
 		} finally {
 		}
 	}
+	
+	@Test
+	public void testBigDataFile() throws Exception {
+		File dir = new File("target/tmp/DataFileTest.big");
+		dir.mkdirs();
+		File f = new File(dir, serde);
+		
+		DataFile<Double> df = new DataFile<Double>(f, Serializations.get(serde), Double.class);
+		
+		System.out.println("Writing doubles to " + f);
+		Serializer<Double> ser = df.newSerializer();
+		for(int i = 0; i < 1024*1024; i++)
+			ser.write((double) i);
+		ser.close();
+		
+		System.out.println("Reading doubles from " + f);
+		DataFileDeserializer<Double> dfd = df.newDeserializer();
+		for(int i = 0; i < 1024*1024; i++)
+			Assert.assertEquals((double) i, (double) dfd.read(), 0);
+		dfd.close();
+		
+		f.delete();
+	}
 }
