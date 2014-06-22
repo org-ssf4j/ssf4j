@@ -1,8 +1,10 @@
 package org.ssf4j.datafile;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.AbstractList;
@@ -81,7 +83,10 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 		long length = offset(pos+1) - start;
 		file.seek(start);
 		
-		Deserializer<T> de = serde.newDeserializer(new RandomAccessFileInputStream(file, length), type);
+		InputStream in = new RandomAccessFileInputStream(file, length);
+		in = new BufferedInputStream(in, 16*1024);
+		
+		Deserializer<T> de = serde.newDeserializer(in, type);
 		return de.read();
 	}
 	
