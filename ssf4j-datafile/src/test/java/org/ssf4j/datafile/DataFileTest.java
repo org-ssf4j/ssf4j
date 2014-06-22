@@ -58,18 +58,31 @@ public class DataFileTest {
 			Assert.assertEquals(3, (int) de.read(3));
 			de.close();
 			
-			MappedDataFileDeserializer<Integer> mde = df.newMappedDeserializer();
-			mde.load();
-			Assert.assertEquals(0, (int) mde.read());
-			Assert.assertEquals(1, (int) mde.read());
-			Assert.assertEquals(2, (int) mde.read());
-			mde.seek(4);
-			Assert.assertEquals(4, (int) mde.read());
-			Assert.assertEquals(3, (int) mde.read(3));
-			mde.close();
-			
 			f.delete();
 		} finally {
 		}
+	}
+	
+	@Test
+	public void testBigDataFile() throws Exception {
+		File dir = new File("target/tmp/DataFileTest.big");
+		dir.mkdirs();
+		File f = new File(dir, serde);
+		
+		DataFile<Double> df = new DataFile<Double>(f, Serializations.get(serde), Double.class);
+		
+		System.out.println("Writing doubles to " + f);
+		Serializer<Double> ser = df.newSerializer();
+		for(int i = 0; i < 1024*1024; i++)
+			ser.write((double) i);
+		ser.close();
+		
+		System.out.println("Reading doubles from " + f);
+		DataFileDeserializer<Double> dfd = df.newDeserializer();
+		for(int i = 0; i < 1024*1024; i++)
+			Assert.assertEquals((double) i, (double) dfd.read(), 0);
+		dfd.close();
+		
+		f.delete();
 	}
 }
