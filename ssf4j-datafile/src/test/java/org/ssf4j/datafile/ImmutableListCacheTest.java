@@ -25,7 +25,7 @@ import org.ssf4j.Serializer;
 public class ImmutableListCacheTest {
 	@Parameters
 	public static Iterable<Object[]> params() {
-		List<String> serdes = Arrays.asList(AVRO_BINARY, AVRO_JSON, JACKSON, JDK, KRYO, PURPLEJRANK, XSTREAM);
+		List<String> serdes = Arrays.asList(KRYO, JACKSON, JDK, PURPLEJRANK, XSTREAM);
 		List<Object[]> ret = new ArrayList<Object[]>();
 		for(String serde : serdes)
 			ret.add(new Object[] {serde});
@@ -54,11 +54,11 @@ public class ImmutableListCacheTest {
 		System.out.println("Writing " + f);
 		Serializer<byte[]> ser = df.newSerializer();
 		long start = System.currentTimeMillis();
-		for(int i = 0; i < NUM; i++) {
+		for(int i = 1; i <= NUM; i++) {
 			ser.write(new byte[SIZE]);
 			System.out.print(".");
-			if((i % 80) == 0 && i > 0)
-				System.out.println();
+			if((i % 80) == 0)
+				System.out.println(i);
 		}
 		System.out.println();
 		ser.close();
@@ -70,11 +70,11 @@ public class ImmutableListCacheTest {
 
 		System.out.println("Reading " + f);
 		start = System.currentTimeMillis();
-		for(int i = 0; i < NUM; i++) {
-			Assert.assertEquals(SIZE, lde.get(i).length);
+		for(int i = 1; i <= NUM; i++) {
+			Assert.assertEquals(SIZE, lde.get(i-1).length);
 			System.out.print(".");
-			if((i % 80) == 0 && i > 0)
-				System.out.println();
+			if((i % 80) == 0)
+				System.out.println(i);
 		}
 		System.out.println();
 		stop = System.currentTimeMillis();
@@ -82,11 +82,11 @@ public class ImmutableListCacheTest {
 		
 		System.out.println("Re-reading " + f);
 		start = System.currentTimeMillis();
-		for(int i = 0; i < NUM; i++) {
-			Assert.assertEquals(SIZE, lde.get(i).length);
+		for(int i = 1; i <= NUM; i++) {
+			Assert.assertEquals(SIZE, lde.get(i-1).length);
 			System.out.print(".");
-			if((i % 80) == 0 && i > 0)
-				System.out.println();
+			if((i % 80) == 0)
+				System.out.println(i);
 		}
 		System.out.println();
 		stop = System.currentTimeMillis();
@@ -94,12 +94,12 @@ public class ImmutableListCacheTest {
 		
 		System.out.println("Backtrack-reading " + f);
 		start = System.currentTimeMillis();
-		for(int i = BT-1; i < NUM; i++) {
-			for(int j = i - (BT - 1); j <= i; j++)
+		for(int i = BT; i <= NUM; i++) {
+			for(int j = i - BT; j < i; j++)
 				Assert.assertEquals(SIZE, lde.get(j).length);
 			System.out.print(".");
-			if((i % 80) == 0 && i > 0)
-				System.out.println();
+			if(((i - BT + 1) % 80) == 0)
+				System.out.println(i);
 		}
 		System.out.println();
 		stop = System.currentTimeMillis();

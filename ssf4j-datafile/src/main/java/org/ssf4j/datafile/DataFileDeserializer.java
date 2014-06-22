@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,20 +19,20 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 	protected Serialization serde;
 	protected Class<T> type;
 	
-	protected List<Long> offsets;
-	protected int objPos;
+	protected long endPtr;
+	protected int size;
+	protected int pos;
+	protected ByteBuffer obuf = ByteBuffer.wrap(new byte[8]);
 
 	public DataFileDeserializer(RandomAccessFile file, Serialization serde, Class<T> type) throws IOException {
 		this.file = file;
 		this.serde = serde;
 		this.type = type;
 		
-		offsets = loadOffsets();
+		size = loadSize();
 	}
 	
-	protected List<Long> loadOffsets() throws IOException {
-		List<Long> ret = new ArrayList<Long>();
-		
+	protected int loadSize() throws IOException {
 		byte[] b = new byte[8];
 		file.seek(file.length());
 		ByteArrayInputStream buf = new ByteArrayInputStream(b);
@@ -43,16 +44,26 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 			file.seek(file.getFilePointer() - 8);
 			file.readFully(b);
 			buf.reset();
-			ret.add(pos = dbuf.readLong());
+			pos = dbuf.readLong();
+			size++;
 			file.seek(file.getFilePointer() - 8);
 		} while(pos >= 0);
 
-		ret.remove(ret.size()-1);
-		Collections.reverse(ret);
-		ret.add(file.getFilePointer());
-		return ret;
+		endPtr = file.getFilePointer();
+		size--;
+		
+		return size;
 	}
 
+	protected long offset(int pos) throws IOException {
+		if(pos == size())
+			return endPtr;
+		long ptr = file.length() - 8L * (size - pos);
+		file.seek(ptr);
+		file.readFully(obuf.array());
+		return obuf.getLong(0);
+	}
+	
 	@Override
 	public void close() throws IOException {
 		file.close();
@@ -60,14 +71,14 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 
 	@Override
 	public T read() throws IOException {
-		return read(objPos++);
+		return read(pos++);
 	}
 	
 	public T read(int pos) throws IOException {
 		if(pos < 0 || pos >= size())
 			throw new IndexOutOfBoundsException();
-		long start = offsets.get(pos);
-		long length = offsets.get(pos+1) - start;
+		long start = offset(pos);
+		long length = offset(pos+1) - start;
 		file.seek(start);
 		
 		Deserializer<T> de = serde.newDeserializer(new RandomAccessFileInputStream(file, length), type);
@@ -75,11 +86,11 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 	}
 	
 	public int size() {
-		return offsets.size() - 1;
+		return size;
 	}
 
 	public void seek(int objPos) {
-		this.objPos = objPos;
+		this.pos = objPos;
 	}
 	
 	@Override
