@@ -11,7 +11,7 @@ To use SSF4J in your library, include the `ssf4j-api` artifact in your `pom.xml`
     <dependency>
      <groupId>org.ssf4j</groupId>
      <artifactId>ssf4j-api</artifactId>
-     <version>0.2.1</version>
+     <version>0.2.2</version>
     </dependency>
 
 ## Usage
@@ -38,7 +38,7 @@ JDK serialization is the JRE's built-in serialization mechanism.  It can only se
     <dependency>
      <groupId>org.ssf4j</groupId>
      <artifactId>ssf4j-jdk</artifactId>
-     <version>0.2.1</version>
+     <version>0.2.2</version>
     </dependency>
 
 ### [Kryo](https://github.com/EsotericSoftware/kryo)
@@ -48,7 +48,7 @@ Kryo can serialize pretty much anything, and fast.
     <dependency>
      <groupId>org.ssf4j</groupId>
      <artifactId>ssf4j-kryo</artifactId>
-     <version>0.2.1</version>
+     <version>0.2.2</version>
     </dependency>
 
 ### [avro](http://avro.apache.org) (binary/json output)
@@ -60,7 +60,7 @@ For binary encoding:
     <dependency>
      <groupId>org.ssf4j</groupId>
      <artifactId>ssf4j-avro-binary</artifactId>
-     <version>0.2.1</version>
+     <version>0.2.2</version>
     </dependency>
 
 For JSON encoding:
@@ -68,7 +68,7 @@ For JSON encoding:
     <dependency>
      <groupId>org.ssf4j</groupId>
      <artifactId>ssf4j-avro-json</artifactId>
-     <version>0.2.1</version>
+     <version>0.2.2</version>
     </dependency>
 
 ### [Jackson](http://wiki.fasterxml.com/JacksonHome)
@@ -78,7 +78,7 @@ Jackson can serialize most things, but fails on a few cases.
     <dependency>
      <groupId>org.ssf4j</groupId>
      <artifactId>ssf4j-jackson</artifactId>
-     <version>0.2.1</version>
+     <version>0.2.2</version>
     </dependency>
 
 ### [Purple Jrank](http://www.purplejrank.org)
@@ -88,7 +88,7 @@ Purple Jrank can serialize anything the JDK can serialize.
     <dependency>
      <groupId>org.ssf4j</groupId>
      <artifactId>ssf4j-purplejrank</artifactId>
-     <version>0.2.1</version>
+     <version>0.2.2</version>
     </dependency>
 
 ### [XStream](http://xstream.codehaus.org)
@@ -98,5 +98,5 @@ XStream can serialize pretty much anything.
     <dependency>
      <groupId>org.ssf4j</groupId>
      <artifactId>ssf4j-xstream</artifactId>
-     <version>0.2.1</version>
+     <version>0.2.2</version>
     </dependency>
