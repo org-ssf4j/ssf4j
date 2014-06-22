@@ -1,5 +1,6 @@
 package org.ssf4j.datafile;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -20,6 +21,8 @@ public class DataFileSerializer<T> implements Serializer<T> {
 	
 	
 	public DataFileSerializer(OutputStream out, Serialization serde, Class<T> type) throws IOException {
+		out = new BufferedOutputStream(out, 16*1024);
+		
 		this.out = out;
 		this.serde = serde;
 		this.type = type;
