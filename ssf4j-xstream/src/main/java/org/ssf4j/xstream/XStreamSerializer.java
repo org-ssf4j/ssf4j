@@ -13,7 +13,7 @@ public class XStreamSerializer<T> implements Serializer<T> {
 	protected OutputStream out;
 	
 	public XStreamSerializer(XStream xstream, OutputStream out) {
-		this.xstream = xstream != null ? xstream : new XStream();
+		this.xstream = xstream;
 		this.out = out;
 	}
 	

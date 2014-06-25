@@ -14,7 +14,7 @@ public class XStreamDeserializer<T> implements Deserializer<T> {
 	protected InputStream in;
 	
 	public XStreamDeserializer(XStream xstream, InputStream in, Class<T> type) {
-		this.xstream = xstream != null ? xstream : new XStream();
+		this.xstream = xstream;
 		this.in = in;
 		this.type = type;
 	}

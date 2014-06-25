@@ -25,7 +25,9 @@ public class XStreamSerialization implements Serialization {
 	 * Create a new {@link XStreamSerialization} that uses a new default {@link XStream}
 	 * for each serializer/deserializer
 	 */
-	public XStreamSerialization() {}
+	public XStreamSerialization() {
+		xstream = new XStream();
+	}
 	
 	/**
 	 * Create a new {@link XStreamSerialization} that uses the supplied {@link XStream} for
