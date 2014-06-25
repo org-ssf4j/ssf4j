@@ -3,7 +3,11 @@ package org.ssf4j.datafile;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.ssf4j.Serialization;
@@ -16,7 +20,7 @@ public class DataFileSerializer<T> implements Serializer<T> {
 	protected Class<T> type;
 	
 	protected CountingOutputStream cout;
-	protected ByteArrayOutputStream buf;
+	protected File offsets;
 	protected DataOutputStream dbuf;
 	
 	
@@ -28,9 +32,9 @@ public class DataFileSerializer<T> implements Serializer<T> {
 		this.type = type;
 		
 		cout = new CountingOutputStream(out);
-		buf = new ByteArrayOutputStream();
-		dbuf = new DataOutputStream(buf);
-		dbuf.writeLong(-1 - this.cout.getCount());
+		offsets = File.createTempFile("offsets", ".tmp");
+		dbuf = new DataOutputStream(new FileOutputStream(offsets));
+		dbuf.writeLong(-1);
 	}
 	
 	@Override
@@ -41,8 +45,13 @@ public class DataFileSerializer<T> implements Serializer<T> {
 	@Override
 	public void close() throws IOException {
 		flush();
-		dbuf.flush();
-		cout.write(buf.toByteArray());
+		dbuf.close();
+		InputStream offin = new FileInputStream(offsets);
+		byte[] buf = new byte[8192];
+		for(int r = offin.read(buf); r != -1; r = offin.read(buf))
+			cout.write(buf, 0, r);
+		offin.close();
+		offsets.delete();
 		cout.flush();
 		out.close();
 	}
