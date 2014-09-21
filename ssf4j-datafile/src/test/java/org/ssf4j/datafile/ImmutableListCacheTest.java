@@ -1,7 +1,5 @@
 package org.ssf4j.datafile;
 
-import static org.ssf4j.Serializations.AVRO_BINARY;
-import static org.ssf4j.Serializations.AVRO_JSON;
 import static org.ssf4j.Serializations.JACKSON;
 import static org.ssf4j.Serializations.JDK;
 import static org.ssf4j.Serializations.KRYO;

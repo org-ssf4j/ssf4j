@@ -8,10 +8,6 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.ssf4j.Deserializer;
 import org.ssf4j.Exceptions;
 import org.ssf4j.Serialization;
