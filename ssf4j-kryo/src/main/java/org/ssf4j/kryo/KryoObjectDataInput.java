@@ -33,8 +33,8 @@ public class KryoObjectDataInput extends KryoDataInput implements ObjectDataInpu
 		if(!nulls && !polymorphic)
 			return kryo.readObject(input, type);
 		else if(!nulls && polymorphic) {
-			type = (Class) kryo.readClass(input).getType();
-			return kryo.readObject(input, type);
+			Class<? extends T> t = ((Class<?>) kryo.readClass(input).getType()).asSubclass(type);
+			return kryo.readObject(input, t);
 		} else if(nulls && !polymorphic) {
 			if(input.readByte() == Kryo.NULL)
 				return null;
