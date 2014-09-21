@@ -30,6 +30,10 @@ public class KryoObjectDataOutput extends KryoDataOutput implements ObjectDataOu
 	@Override
 	public void write(boolean nulls, boolean polymorphic, Object object)
 			throws IOException {
+		if(object instanceof Class<?>) {
+			kryo.writeClass(output, (Class) object);
+			return;
+		}
 		if(!nulls && !polymorphic)
 			kryo.writeObject(output, object);
 		else if(!nulls && polymorphic) {

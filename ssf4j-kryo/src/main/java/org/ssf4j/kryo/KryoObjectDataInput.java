@@ -30,6 +30,8 @@ public class KryoObjectDataInput extends KryoDataInput implements ObjectDataInpu
 	@Override
 	public <T> T read(boolean nulls, boolean polymorphic, Class<T> type)
 			throws IOException {
+		if(Class.class.isAssignableFrom(type))
+			return type.cast(kryo.readClass(input).getType());
 		if(!nulls && !polymorphic)
 			return kryo.readObject(input, type);
 		else if(!nulls && polymorphic) {
