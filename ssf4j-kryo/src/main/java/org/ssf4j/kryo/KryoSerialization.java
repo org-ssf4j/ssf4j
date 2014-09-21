@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.ssf4j.Serialization;
+import org.ssf4j.Serialized;
+
 import com.esotericsoftware.kryo.Kryo;
 
 /**
@@ -24,7 +26,9 @@ public class KryoSerialization implements Serialization {
 	 * Create a new {@link KryoSerialization} that uses a new default {@link Kryo} for
 	 * each new serializer/deserializer
 	 */
-	public KryoSerialization() {}
+	public KryoSerialization() {
+		this(new Kryo());
+	}
 	
 	/**
 	 * Create a new {@link KryoSerialization} that uses the supplied {@link Kryo} for
@@ -33,6 +37,7 @@ public class KryoSerialization implements Serialization {
 	 */
 	public KryoSerialization(Kryo kryo) {
 		this.kryo = kryo;
+		this.kryo.addDefaultSerializer(Serialized.class, SerializedSerializer.class);
 	}
 	
 	/**

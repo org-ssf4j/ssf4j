@@ -15,7 +15,7 @@ public class KryoDeserializer<T> implements Deserializer<T> {
 	protected Class<T> type;
 	
 	public KryoDeserializer(Kryo kryo, InputStream in, Class<T> type) {
-		this.kryo = kryo != null ? kryo : new Kryo();
+		this.kryo = kryo;
 		this.in = new Input(in);
 		this.type = type;
 	}
