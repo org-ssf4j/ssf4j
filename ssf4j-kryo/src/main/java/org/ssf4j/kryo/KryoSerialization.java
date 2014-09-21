@@ -28,6 +28,7 @@ public class KryoSerialization implements Serialization {
 	 */
 	public KryoSerialization() {
 		this(new Kryo());
+		kryo.addDefaultSerializer(Serialized.class, SerializedSerializer.class);
 	}
 	
 	/**
@@ -37,7 +38,6 @@ public class KryoSerialization implements Serialization {
 	 */
 	public KryoSerialization(Kryo kryo) {
 		this.kryo = kryo;
-		this.kryo.addDefaultSerializer(Serialized.class, SerializedSerializer.class);
 	}
 	
 	/**
