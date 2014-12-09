@@ -1,6 +1,5 @@
 package org.ssf4j.jdk;
 
-import java.io.DataOutput;
 import java.io.IOException;
 import java.io.ObjectOutput;
 
