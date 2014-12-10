@@ -42,4 +42,9 @@ public class JacksonSerialization implements Serialization {
 		return new JacksonDeserializer<T>(in, mapper, type);
 	}
 
+	@Override
+	public boolean isThreadSafe() {
+		return false;
+	}
+
 }

@@ -26,4 +26,10 @@ public interface Serialization {
 	 * @throws IOException
 	 */
 	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type) throws IOException;
+	
+	/**
+	 * Returns {@code true} if this {@link Serialization} is thread-safe
+	 * @return
+	 */
+	public boolean isThreadSafe();
 }

@@ -31,5 +31,10 @@ public class JdkSerialization implements Serialization {
 		return new JdkDeserializer<T>(in);
 	}
 
+	@Override
+	public boolean isThreadSafe() {
+		return true;
+	}
+
 
 }
