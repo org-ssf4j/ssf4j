@@ -17,6 +17,8 @@ public class FileSeekingInput implements SeekingInput {
 	
 	public FileSeekingInput(File file, long start, long stop) throws IOException {
 		this.file = new RandomAccessFile(file, "r");
+		this.start = start;
+		this.stop = stop;
 		seek(0);
 	}
 	
