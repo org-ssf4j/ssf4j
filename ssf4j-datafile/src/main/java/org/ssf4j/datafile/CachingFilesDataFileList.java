@@ -31,12 +31,12 @@ public class CachingFilesDataFileList<T> extends FilesDataFileList<T> {
 	 */
 	public CachingFilesDataFileList(File cache, File index, Serialization serde, Class<T> type) throws IOException {
 		super(cache, index, serde, type);
-		cachingLists = new ArrayList<ImmutableListCache<T>>();
 	}
 
 	@Override
 	protected void readIndex() throws IOException {
 		super.readIndex();
+		cachingLists = new ArrayList<ImmutableListCache<T>>();
 		// Add a caching list for each read DFD
 		for(DataFileDeserializer<T> des : super.desers)
 			cachingLists.add(new ImmutableListCache<T>(des));
