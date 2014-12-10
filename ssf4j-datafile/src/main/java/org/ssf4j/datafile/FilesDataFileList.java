@@ -107,6 +107,8 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 	@Override
 	public synchronized void close() throws IOException {
 		closed = true;
+		for(DataFileDeserializer<T> des : desers)
+			des.close();
 	}
 
 	@Override
