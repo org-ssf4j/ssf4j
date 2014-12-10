@@ -2,14 +2,13 @@ package org.ssf4j.datafile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 
-public class RandomAccessFileInputStream extends InputStream {
+public class SeekingInputInputStream extends InputStream {
 
-	protected RandomAccessFile file;
+	protected SeekingInput file;
 	protected long length;
 	
-	public RandomAccessFileInputStream(RandomAccessFile file, long length) {
+	public SeekingInputInputStream(SeekingInput file, long length) {
 		this.file = file;
 		this.length = length;
 	}

@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.ssf4j.Locked;
 import org.ssf4j.Serialization;
 import org.ssf4j.Serializer;
 
