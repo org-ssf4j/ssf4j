@@ -56,4 +56,9 @@ public class KryoSerialization implements Serialization {
 		return new KryoDeserializer<T>(kryo, in, type);
 	}
 
+	@Override
+	public boolean isThreadSafe() {
+		return false;
+	}
+
 }

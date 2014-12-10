@@ -54,4 +54,9 @@ public class XStreamSerialization implements Serialization {
 		return new XStreamDeserializer<T>(xstream, in, type);
 	}
 
+	@Override
+	public boolean isThreadSafe() {
+		return false;
+	}
+
 }

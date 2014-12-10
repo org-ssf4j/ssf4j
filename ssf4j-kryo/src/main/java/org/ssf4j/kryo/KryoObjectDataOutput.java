@@ -27,6 +27,7 @@ public class KryoObjectDataOutput extends KryoDataOutput implements ObjectDataOu
 		write(nulls, false, object);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void write(boolean nulls, boolean polymorphic, Object object)
 			throws IOException {

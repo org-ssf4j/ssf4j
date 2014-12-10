@@ -55,4 +55,9 @@ public class AutomaticSerialization implements Serialization {
 	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type) throws IOException {
 		return getImplementation().newDeserializer(in, type);
 	}
+
+	@Override
+	public boolean isThreadSafe() {
+		return getImplementation().isThreadSafe();
+	}
 }
