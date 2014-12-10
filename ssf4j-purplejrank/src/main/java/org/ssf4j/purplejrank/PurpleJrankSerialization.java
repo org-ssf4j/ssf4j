@@ -31,5 +31,10 @@ public class PurpleJrankSerialization implements Serialization {
 		return new PurpleJrankDeserializer<T>(in);
 	}
 
+	@Override
+	public boolean isThreadSafe() {
+		return true;
+	}
+
 
 }
