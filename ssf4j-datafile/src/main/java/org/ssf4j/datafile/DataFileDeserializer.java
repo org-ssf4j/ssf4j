@@ -10,7 +10,6 @@ import java.util.AbstractList;
 
 import org.ssf4j.Deserializer;
 import org.ssf4j.Exceptions;
-import org.ssf4j.Locked;
 import org.ssf4j.Serialization;
 
 public class DataFileDeserializer<T> extends AbstractList<T> implements Deserializer<T> {

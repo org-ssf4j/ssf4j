@@ -14,7 +14,6 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.compress.utils.IOUtils;
 import org.ssf4j.Exceptions;
 import org.ssf4j.Serialization;
 
@@ -90,7 +89,9 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 		try {
 			InputStream in = new FileInputStream(tmp);
 			try {
-				IOUtils.copy(in, out);
+				byte[] buf = new byte[8192];
+				for(int r = in.read(buf); r != -1; r = in.read(buf))
+					out.write(buf, 0, r);
 			} finally {
 				in.close();
 			}
