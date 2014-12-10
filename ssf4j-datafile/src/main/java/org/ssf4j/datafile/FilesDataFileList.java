@@ -151,6 +151,8 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 		desers.add(new DataFileDeserializer<T>(new FileSeekingInput(cache, start, stop), serde, type));
 		addIndex(start, stop);
 		
+		tmp.delete();
+		
 		return index;
 	}
 	
