@@ -162,7 +162,7 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 	}
 
 	@Override
-	public synchronized DataFileDeserializer<T> get(int index) {
+	public synchronized List<T> get(int index) {
 		if(closed)
 			throw new IllegalStateException(this + " closed");
 		return desers.get(index);
