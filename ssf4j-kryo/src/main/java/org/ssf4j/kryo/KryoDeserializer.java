@@ -10,11 +10,13 @@ import com.esotericsoftware.kryo.io.Input;
 
 public class KryoDeserializer<T> implements Deserializer<T> {
 
+	protected KryoSerialization serde;
 	protected Kryo kryo;
 	protected Input in;
 	protected Class<T> type;
 	
-	public KryoDeserializer(Kryo kryo, InputStream in, Class<T> type) {
+	public KryoDeserializer(KryoSerialization serde, Kryo kryo, InputStream in, Class<T> type) {
+		this.serde = serde;
 		this.kryo = kryo;
 		this.in = new Input(in);
 		this.type = type;
@@ -22,7 +24,12 @@ public class KryoDeserializer<T> implements Deserializer<T> {
 	
 	@Override
 	public T read() throws IOException {
-		return kryo.readObject(in, type);
+		serde.getLock().lock();
+		try {
+			return kryo.readObject(in, type);
+		} finally {
+			serde.getLock().unlock();
+		}
 	}
 
 	@Override

@@ -47,7 +47,7 @@ public class KryoSerialization implements Serialization, Locked {
 	 */
 	@Override
 	public <T> KryoSerializer<T> newSerializer(OutputStream out, Class<T> type) throws IOException {
-		return new KryoSerializer<T>(kryo, out);
+		return new KryoSerializer<T>(this, kryo, out);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class KryoSerialization implements Serialization, Locked {
 	 */
 	@Override
 	public <T> KryoDeserializer<T> newDeserializer(InputStream in, Class<T> type) throws IOException {
-		return new KryoDeserializer<T>(kryo, in, type);
+		return new KryoDeserializer<T>(this, kryo, in, type);
 	}
 
 	@Override

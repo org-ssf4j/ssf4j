@@ -83,18 +83,11 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 		InputStream in = new SeekingInputInputStream(file, length);
 		in = new BufferedInputStream(in, 16*1024);
 		
-		if(!serde.isThreadSafe())
-			((Locked) serde).getLock().lock();
+		Deserializer<T> de = serde.newDeserializer(in, type);
 		try {
-			Deserializer<T> de = serde.newDeserializer(in, type);
-			try {
-				return de.read();
-			} finally {
-				de.close();
-			}
+			return de.read();
 		} finally {
-			if(!serde.isThreadSafe())
-				((Locked) serde).getLock().unlock();
+			de.close();
 		}
 	}
 	

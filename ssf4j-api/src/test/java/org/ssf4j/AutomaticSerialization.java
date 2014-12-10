@@ -53,15 +53,28 @@ public class AutomaticSerialization implements Serialization {
 	}
 	
 	private AutomaticSerialization() {
-		getImplementation();
 	}
 	
 	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type) throws IOException {
-		return getImplementation().newSerializer(out, type);
+		if(this instanceof Locked)
+			((Locked) this).getLock().lock();
+		try {
+			return getImplementation().newSerializer(out, type);
+		} finally {
+			if(this instanceof Locked)
+				((Locked) this).getLock().unlock();
+		}
 	}
 	
 	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type) throws IOException {
-		return getImplementation().newDeserializer(in, type);
+		if(this instanceof Locked)
+			((Locked) this).getLock().lock();
+		try {
+			return getImplementation().newDeserializer(in, type);
+		} finally {
+			if(this instanceof Locked)
+				((Locked) this).getLock().unlock();
+		}
 	}
 
 	@Override
@@ -71,7 +84,6 @@ public class AutomaticSerialization implements Serialization {
 	
 	private static class LockedAutomaticSerialization extends AutomaticSerialization implements Locked {
 		private LockedAutomaticSerialization() {
-			super();
 		}
 
 		@Override

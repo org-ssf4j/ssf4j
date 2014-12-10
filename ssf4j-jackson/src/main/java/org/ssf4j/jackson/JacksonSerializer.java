@@ -9,10 +9,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JacksonSerializer<T> implements Serializer<T> {
 
+	protected JacksonSerialization serde;
 	protected OutputStream out;
 	protected ObjectMapper mapper;
 	
-	public JacksonSerializer(OutputStream out, ObjectMapper mapper) throws IOException {
+	public JacksonSerializer(JacksonSerialization serde, OutputStream out, ObjectMapper mapper) throws IOException {
+		this.serde = serde;
 		this.out = out;
 		this.mapper = mapper != null ? mapper : new ObjectMapper();
 	}
@@ -30,7 +32,12 @@ public class JacksonSerializer<T> implements Serializer<T> {
 
 	@Override
 	public void write(T object) throws IOException {
-		mapper.writeValue(out, object);
+		serde.getLock().lock();
+		try {
+			mapper.writeValue(out, object);
+		} finally {
+			serde.getLock().unlock();
+		}
 	}
 
 }
