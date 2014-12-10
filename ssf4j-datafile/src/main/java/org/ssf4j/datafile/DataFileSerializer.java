@@ -60,16 +60,9 @@ public class DataFileSerializer<T> implements Serializer<T> {
 	public void write(T object) throws IOException {
 		flush();
 		dbuf.writeLong(cout.getCount());
-		if(!serde.isThreadSafe())
-			((Locked) serde).getLock().lock();
-		try {
-			Serializer<T> ser = serde.newSerializer(this.cout, type);
-			ser.write(object);
-			ser.close();
-		} finally {
-			if(!serde.isThreadSafe())
-				((Locked) serde).getLock().unlock();
-		}
+		Serializer<T> ser = serde.newSerializer(this.cout, type);
+		ser.write(object);
+		ser.close();
 	}
 
 }

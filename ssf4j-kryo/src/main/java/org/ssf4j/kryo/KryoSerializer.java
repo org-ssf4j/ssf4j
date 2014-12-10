@@ -10,10 +10,12 @@ import com.esotericsoftware.kryo.io.Output;
 
 public class KryoSerializer<T> implements Serializer<T> {
 
+	protected KryoSerialization serde;
 	protected Kryo kryo;
 	protected Output out;
 	
-	public KryoSerializer(Kryo kryo, OutputStream out) {
+	public KryoSerializer(KryoSerialization serde, Kryo kryo, OutputStream out) {
+		this.serde = serde;
 		this.kryo = kryo;
 		this.out = new Output(out);
 	}
@@ -31,7 +33,12 @@ public class KryoSerializer<T> implements Serializer<T> {
 
 	@Override
 	public void write(Object object) throws IOException {
-		kryo.writeObject(out, object);
+		serde.getLock().lock();
+		try {
+			kryo.writeObject(out, object);
+		} finally {
+			serde.getLock().unlock();
+		}
 	}
 
 }

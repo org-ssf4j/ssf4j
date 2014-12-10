@@ -46,7 +46,7 @@ public class XStreamSerialization implements Serialization, Locked {
 	 */
 	@Override
 	public <T> XStreamSerializer<T> newSerializer(OutputStream out, Class<T> type) throws IOException {
-		return new XStreamSerializer<T>(xstream, out);
+		return new XStreamSerializer<T>(this, xstream, out);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class XStreamSerialization implements Serialization, Locked {
 	 */
 	@Override
 	public <T> XStreamDeserializer<T> newDeserializer(InputStream in, Class<T> type) throws IOException {
-		return new XStreamDeserializer<T>(xstream, in, type);
+		return new XStreamDeserializer<T>(this, xstream, in, type);
 	}
 
 	@Override

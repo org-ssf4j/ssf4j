@@ -33,7 +33,7 @@ public class JacksonSerialization implements Serialization, Locked {
 	@Override
 	public <T> JacksonSerializer<T> newSerializer(OutputStream out, Class<T> type)
 			throws IOException {
-		return new JacksonSerializer<T>(out, mapper);
+		return new JacksonSerializer<T>(this, out, mapper);
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class JacksonSerialization implements Serialization, Locked {
 	@Override
 	public <T> JacksonDeserializer<T> newDeserializer(InputStream in, Class<T> type)
 			throws IOException {
-		return new JacksonDeserializer<T>(in, mapper, type);
+		return new JacksonDeserializer<T>(this, in, mapper, type);
 	}
 
 	@Override
