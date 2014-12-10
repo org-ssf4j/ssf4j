@@ -3,7 +3,9 @@ package org.ssf4j.kryo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.locks.ReentrantLock;
 
+import org.ssf4j.Locked;
 import org.ssf4j.Serialization;
 import org.ssf4j.Serialized;
 
@@ -14,7 +16,7 @@ import com.esotericsoftware.kryo.Kryo;
  * @author robin
  *
  */
-public class KryoSerialization implements Serialization {
+public class KryoSerialization implements Serialization, Locked {
 
 	/**
 	 * The instance of {@link Kryo} to use for serialization and deserialization.
@@ -59,6 +61,16 @@ public class KryoSerialization implements Serialization {
 	@Override
 	public boolean isThreadSafe() {
 		return false;
+	}
+
+	/**
+	 * The lock for this serialization
+	 */
+	protected ReentrantLock lock = new ReentrantLock();
+
+	@Override
+	public ReentrantLock getLock() {
+		return lock;
 	}
 
 }
