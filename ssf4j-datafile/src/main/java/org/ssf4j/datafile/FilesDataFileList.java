@@ -17,17 +17,50 @@ import java.util.List;
 import org.ssf4j.Exceptions;
 import org.ssf4j.Serialization;
 
+/**
+ * List of {@link DataFileDeserializer}s.  Basically a way to keep a lot of {@link DataFile}s in
+ * a single file.  Requires two files, one for the data, and one for the index.
+ * @author robin
+ *
+ * @param <T>
+ */
 public class FilesDataFileList<T> extends AbstractList<List<T>> implements Closeable {
+	/**
+	 * File that holds the data
+	 */
 	protected File cache;
+	/**
+	 * File that holds the indexes of the data
+	 */
 	protected File index;
 	
+	/**
+	 * The {@link DataFileDeserializer}s already in the list
+	 */
 	protected List<DataFileDeserializer<T>> desers;
 	
+	/**
+	 * The {@link Serialization} to use
+	 */
 	protected Serialization serde;
+	/**
+	 * The class of object being stored
+	 */
 	protected Class<T> type;
 	
+	/**
+	 * Whether this list has been closed
+	 */
 	protected boolean closed;
 	
+	/**
+	 * Create a new {@link FilesDataFileList}
+	 * @param cache
+	 * @param index
+	 * @param serde
+	 * @param type
+	 * @throws IOException
+	 */
 	public FilesDataFileList(File cache, File index, Serialization serde, Class<T> type) throws IOException {
 		this.cache = cache;
 		this.index = index;
@@ -40,6 +73,10 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 			readIndex();
 	}
 	
+	/**
+	 * Read an existing index file and create deserializers for it
+	 * @throws IOException
+	 */
 	protected void readIndex() throws IOException {
 		DataInputStream data = new DataInputStream(new FileInputStream(index));
 		try {
@@ -56,6 +93,12 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 		}
 	}
 	
+	/**
+	 * Add an entry to the index, creating if necessary
+	 * @param start
+	 * @param stop
+	 * @throws IOException
+	 */
 	protected void addIndex(long start, long stop) throws IOException {
 		DataOutputStream data = new DataOutputStream(new FileOutputStream(index, true));
 		try {
@@ -66,6 +109,12 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 		}
 	}
 	
+	/**
+	 * Append another list of data to this list
+	 * @param list
+	 * @return
+	 * @throws IOException
+	 */
 	public synchronized int append(List<T> list) throws IOException {
 		if(closed)
 			throw new IllegalStateException(this + " closed");
@@ -113,7 +162,7 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 	}
 
 	@Override
-	public synchronized List<T> get(int index) {
+	public synchronized DataFileDeserializer<T> get(int index) {
 		if(closed)
 			throw new IllegalStateException(this + " closed");
 		return desers.get(index);
@@ -127,7 +176,7 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 	}
 	
 	@Override
-	public boolean add(List<T> e) {
+	public synchronized boolean add(List<T> e) {
 		try {
 			append(e);
 			return true;

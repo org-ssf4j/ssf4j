@@ -4,13 +4,35 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/**
+ * {@link SeekingInput} backed by a {@link ByteBuffer}
+ * @author robin
+ *
+ */
 public class ByteBufferSeekingInput implements SeekingInput {
 
+	/**
+	 * The {@link ByteBuffer} with the data
+	 */
 	protected ByteBuffer buffer;
+	/**
+	 * Start position in the buffer
+	 */
 	protected int start;
+	/**
+	 * Stop position in the buffer
+	 */
 	protected int stop;
+	/**
+	 * Whether this {@link SeekingInput} is closed
+	 */
 	protected boolean closed;
 	
+	/**
+	 * Create a new {@link ByteBufferSeekingInput} whose start position is the position
+	 * of the byte buffer and whose stop position is the limit of the byte buffer
+	 * @param buffer
+	 */
 	public ByteBufferSeekingInput(ByteBuffer buffer) {
 		this.buffer = buffer;
 		start = buffer.position();

@@ -5,16 +5,42 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+/**
+ * {@link SeekingInput} that reads from a {@link File}
+ * @author robin
+ *
+ */
 public class FileSeekingInput implements SeekingInput {
 	
+	/**
+	 * {@link RandomAccessFile} to access the file
+	 */
 	protected RandomAccessFile file;
+	/**
+	 * The start position within the {@link RandomAccessFile}
+	 */
 	protected long start;
+	/**
+	 * The stop position within the {@link RandomAccessFile}
+	 */
 	protected long stop;
 	
+	/**
+	 * Create a new {@link FileSeekingInput} over the entire file
+	 * @param file
+	 * @throws IOException
+	 */
 	public FileSeekingInput(File file) throws IOException {
 		this(file, 0L, file.length());
 	}
 	
+	/**
+	 * Create a new {@link FileSeekingInput} over a range in the file
+	 * @param file
+	 * @param start
+	 * @param stop
+	 * @throws IOException
+	 */
 	public FileSeekingInput(File file, long start, long stop) throws IOException {
 		this.file = new RandomAccessFile(file, "r");
 		this.start = start;
@@ -22,6 +48,11 @@ public class FileSeekingInput implements SeekingInput {
 		seek(0);
 	}
 	
+	/**
+	 * Return the number of remaining bytes
+	 * @return
+	 * @throws IOException
+	 */
 	protected long remaining() throws IOException {
 		return stop - file.getFilePointer();
 	}
