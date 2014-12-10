@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.ssf4j</groupId>
 		<artifactId>ssf4j-parent</artifactId>
-		<version>0.3.0-SNAPSHOT</version>
+		<version>0.3.0</version>
 		<relativePath>../ssf4j-parent</relativePath>
 	</parent>
 	<artifactId>ssf4j-api</artifactId>
