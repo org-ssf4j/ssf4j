@@ -31,6 +31,8 @@ public class CachingFilesDataFileList<T> extends FilesDataFileList<T> {
 	 */
 	public CachingFilesDataFileList(File cache, File index, Serialization serde, Class<T> type) throws IOException {
 		super(cache, index, serde, type);
+		if(cachingLists == null)
+			cachingLists = new ArrayList<ImmutableListCache<T>>();
 	}
 
 	@Override
