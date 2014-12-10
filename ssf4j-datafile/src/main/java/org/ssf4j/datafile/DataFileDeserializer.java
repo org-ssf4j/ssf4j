@@ -8,8 +8,10 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.AbstractList;
+
 import org.ssf4j.Deserializer;
 import org.ssf4j.Exceptions;
+import org.ssf4j.Locked;
 import org.ssf4j.Serialization;
 
 public class DataFileDeserializer<T> extends AbstractList<T> implements Deserializer<T> {
@@ -82,8 +84,19 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 		InputStream in = new RandomAccessFileInputStream(file, length);
 		in = new BufferedInputStream(in, 16*1024);
 		
-		Deserializer<T> de = serde.newDeserializer(in, type);
-		return de.read();
+		if(!serde.isThreadSafe())
+			((Locked) serde).getLock().lock();
+		try {
+			Deserializer<T> de = serde.newDeserializer(in, type);
+			try {
+				return de.read();
+			} finally {
+				de.close();
+			}
+		} finally {
+			if(!serde.isThreadSafe())
+				((Locked) serde).getLock().unlock();
+		}
 	}
 	
 	public int size() {
