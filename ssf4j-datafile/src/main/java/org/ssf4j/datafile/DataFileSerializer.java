@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.ssf4j.Locked;
 import org.ssf4j.Serialization;
 import org.ssf4j.Serializer;
 
@@ -59,9 +60,16 @@ public class DataFileSerializer<T> implements Serializer<T> {
 	public void write(T object) throws IOException {
 		flush();
 		dbuf.writeLong(cout.getCount());
-		Serializer<T> ser = serde.newSerializer(this.cout, type);
-		ser.write(object);
-		ser.close();
+		if(!serde.isThreadSafe())
+			((Locked) serde).getLock().lock();
+		try {
+			Serializer<T> ser = serde.newSerializer(this.cout, type);
+			ser.write(object);
+			ser.close();
+		} finally {
+			if(!serde.isThreadSafe())
+				((Locked) serde).getLock().unlock();
+		}
 	}
 
 }

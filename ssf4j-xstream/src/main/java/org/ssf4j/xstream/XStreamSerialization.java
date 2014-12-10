@@ -3,8 +3,11 @@ package org.ssf4j.xstream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.locks.ReentrantLock;
 
+import org.ssf4j.Locked;
 import org.ssf4j.Serialization;
+
 import com.thoughtworks.xstream.XStream;
 
 /**
@@ -12,7 +15,7 @@ import com.thoughtworks.xstream.XStream;
  * @author robin
  *
  */
-public class XStreamSerialization implements Serialization {
+public class XStreamSerialization implements Serialization, Locked {
 
 	/**
 	 * The {@link XStream} instance to use for serialization/deserialization.
@@ -59,4 +62,13 @@ public class XStreamSerialization implements Serialization {
 		return false;
 	}
 
+	/**
+	 * The lock for this serialization
+	 */
+	protected ReentrantLock lock = new ReentrantLock();
+
+	@Override
+	public ReentrantLock getLock() {
+		return lock;
+	}
 }

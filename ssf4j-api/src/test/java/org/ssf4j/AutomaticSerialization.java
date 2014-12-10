@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class AutomaticSerialization implements Serialization {
 	private static AutomaticSerialization instance;
@@ -12,8 +13,15 @@ public class AutomaticSerialization implements Serialization {
 	
 	public synchronized static AutomaticSerialization get() {
 		if(instance == null)
-			instance = new AutomaticSerialization();
+			instance = createAutomatic();
 		return instance;
+	}
+	
+	private static AutomaticSerialization createAutomatic() {
+		if(getImplementation() instanceof Locked)
+			return new LockedAutomaticSerialization();
+		else
+			return new AutomaticSerialization();
 	}
 	
 	private static synchronized Serialization getImplementation() {
@@ -59,5 +67,16 @@ public class AutomaticSerialization implements Serialization {
 	@Override
 	public boolean isThreadSafe() {
 		return getImplementation().isThreadSafe();
+	}
+	
+	private static class LockedAutomaticSerialization extends AutomaticSerialization implements Locked {
+		private LockedAutomaticSerialization() {
+			super();
+		}
+
+		@Override
+		public ReentrantLock getLock() {
+			return ((Locked) getImplementation()).getLock();
+		}
 	}
 }
