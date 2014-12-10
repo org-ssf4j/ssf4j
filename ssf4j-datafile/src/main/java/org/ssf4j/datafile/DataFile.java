@@ -3,7 +3,6 @@ package org.ssf4j.datafile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 
 import org.ssf4j.Serialization;
 
@@ -26,7 +25,7 @@ public class DataFile<T> {
 
 	public DataFileDeserializer<T> newDeserializer()
 			throws IOException {
-		return new DataFileDeserializer<T>(new RandomAccessFile(file, "r"), serde, type);
+		return new DataFileDeserializer<T>(new FileSeekingInput(file), serde, type);
 	}
 	
 }

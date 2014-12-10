@@ -65,6 +65,8 @@ public class DataFileTest {
 	
 	@Test
 	public void testBigDataFile() throws Exception {
+		final int COUNT = 128 * 1024;
+		
 		File dir = new File("target/tmp/DataFileTest.big");
 		dir.mkdirs();
 		File f = new File(dir, serde);
@@ -73,13 +75,13 @@ public class DataFileTest {
 		
 		System.out.println("Writing doubles to " + f);
 		Serializer<Double> ser = df.newSerializer();
-		for(int i = 0; i < 1024*1024; i++)
+		for(int i = 0; i < COUNT; i++)
 			ser.write((double) i);
 		ser.close();
 		
 		System.out.println("Reading doubles from " + f);
 		DataFileDeserializer<Double> dfd = df.newDeserializer();
-		for(int i = 0; i < 1024*1024; i++)
+		for(int i = 0; i < COUNT; i++)
 			Assert.assertEquals((double) i, (double) dfd.read(), 0);
 		dfd.close();
 		

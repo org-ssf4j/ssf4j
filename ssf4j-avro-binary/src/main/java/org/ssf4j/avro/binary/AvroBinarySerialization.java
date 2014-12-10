@@ -66,5 +66,10 @@ public class AvroBinarySerialization implements Serialization {
 		return new AvroBinaryDeserializer<T>(schema(type), in, type);
 	}
 
+	@Override
+	public boolean isThreadSafe() {
+		return true;
+	}
+
 
 }

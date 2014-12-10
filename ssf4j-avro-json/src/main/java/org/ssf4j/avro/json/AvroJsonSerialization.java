@@ -66,5 +66,10 @@ public class AvroJsonSerialization implements Serialization {
 		return new AvroJsonDeserializer<T>(schema(type), in, type);
 	}
 
+	@Override
+	public boolean isThreadSafe() {
+		return true;
+	}
+
 
 }

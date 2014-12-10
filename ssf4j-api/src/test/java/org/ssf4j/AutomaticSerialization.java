@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class AutomaticSerialization implements Serialization {
 	private static AutomaticSerialization instance;
@@ -12,8 +13,15 @@ public class AutomaticSerialization implements Serialization {
 	
 	public synchronized static AutomaticSerialization get() {
 		if(instance == null)
-			instance = new AutomaticSerialization();
+			instance = createAutomatic();
 		return instance;
+	}
+	
+	private static AutomaticSerialization createAutomatic() {
+		if(getImplementation() instanceof Locked)
+			return new LockedAutomaticSerialization();
+		else
+			return new AutomaticSerialization();
 	}
 	
 	private static synchronized Serialization getImplementation() {
@@ -45,14 +53,42 @@ public class AutomaticSerialization implements Serialization {
 	}
 	
 	private AutomaticSerialization() {
-		getImplementation();
 	}
 	
 	public <T> Serializer<T> newSerializer(OutputStream out, Class<T> type) throws IOException {
-		return getImplementation().newSerializer(out, type);
+		if(this instanceof Locked)
+			((Locked) this).getLock().lock();
+		try {
+			return getImplementation().newSerializer(out, type);
+		} finally {
+			if(this instanceof Locked)
+				((Locked) this).getLock().unlock();
+		}
 	}
 	
 	public <T> Deserializer<T> newDeserializer(InputStream in, Class<T> type) throws IOException {
-		return getImplementation().newDeserializer(in, type);
+		if(this instanceof Locked)
+			((Locked) this).getLock().lock();
+		try {
+			return getImplementation().newDeserializer(in, type);
+		} finally {
+			if(this instanceof Locked)
+				((Locked) this).getLock().unlock();
+		}
+	}
+
+	@Override
+	public boolean isThreadSafe() {
+		return getImplementation().isThreadSafe();
+	}
+	
+	private static class LockedAutomaticSerialization extends AutomaticSerialization implements Locked {
+		private LockedAutomaticSerialization() {
+		}
+
+		@Override
+		public ReentrantLock getLock() {
+			return ((Locked) getImplementation()).getLock();
+		}
 	}
 }

@@ -9,11 +9,13 @@ import com.thoughtworks.xstream.XStream;
 
 public class XStreamSerializer<T> implements Serializer<T> {
 
+	protected XStreamSerialization serde;
 	protected XStream xstream;
 	protected OutputStream out;
 	
-	public XStreamSerializer(XStream xstream, OutputStream out) {
-		this.xstream = xstream != null ? xstream : new XStream();
+	public XStreamSerializer(XStreamSerialization serde, XStream xstream, OutputStream out) {
+		this.serde = serde;
+		this.xstream = xstream;
 		this.out = out;
 	}
 	
@@ -30,7 +32,12 @@ public class XStreamSerializer<T> implements Serializer<T> {
 
 	@Override
 	public void write(Object object) throws IOException {
-		xstream.toXML(object, out);
+		serde.getLock().lock();
+		try {
+			xstream.toXML(object, out);
+		} finally {
+			serde.getLock().unlock();
+		}
 	}
 
 }

@@ -3,8 +3,11 @@ package org.ssf4j.jackson;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.locks.ReentrantLock;
 
+import org.ssf4j.Locked;
 import org.ssf4j.Serialization;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -14,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author robin
  *
  */
-public class JacksonSerialization implements Serialization {
+public class JacksonSerialization implements Serialization, Locked {
 
 	protected ObjectMapper mapper;
 	
@@ -30,7 +33,7 @@ public class JacksonSerialization implements Serialization {
 	@Override
 	public <T> JacksonSerializer<T> newSerializer(OutputStream out, Class<T> type)
 			throws IOException {
-		return new JacksonSerializer<T>(out, mapper);
+		return new JacksonSerializer<T>(this, out, mapper);
 	}
 
 	/**
@@ -39,7 +42,22 @@ public class JacksonSerialization implements Serialization {
 	@Override
 	public <T> JacksonDeserializer<T> newDeserializer(InputStream in, Class<T> type)
 			throws IOException {
-		return new JacksonDeserializer<T>(in, mapper, type);
+		return new JacksonDeserializer<T>(this, in, mapper, type);
+	}
+
+	@Override
+	public boolean isThreadSafe() {
+		return false;
+	}
+
+	/**
+	 * The lock for this serialization
+	 */
+	protected ReentrantLock lock = new ReentrantLock();
+
+	@Override
+	public ReentrantLock getLock() {
+		return lock;
 	}
 
 }
