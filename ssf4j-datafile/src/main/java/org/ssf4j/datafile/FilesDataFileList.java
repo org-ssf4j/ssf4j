@@ -111,6 +111,26 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 		}
 	}
 
+	protected Object[] createDataFile(List<T> list) throws IOException {
+		final File tmp = new File(System.getProperty("java.io.tmpdir"), cache.getName() + "." + UUID.randomUUID() + ".tmp");
+		DataFile<T> data = new DataFile<T>(tmp, serde, type);
+		DataFileSerializer<T> ser = data.newSerializer();
+		try {
+			for(T e : list)
+				ser.write(e);
+		} finally {
+			ser.close();
+		}
+		InputStream in = new FileInputStream(tmp) {
+			@Override
+			public void close() throws IOException {
+				super.close();
+				tmp.delete();
+			}
+		};
+		return new Object[] {in, tmp.length()};
+	}
+	
 	/**
 	 * Append another list of data to this list
 	 * @param list
@@ -122,40 +142,30 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 			throw new IllegalStateException(this + " closed");
 
 
-		File tmp = new File(System.getProperty("java.io.tmpdir"), cache.getName() + "." + UUID.randomUUID() + ".tmp");
-		DataFile<T> data = new DataFile<T>(tmp, serde, type);
-		DataFileSerializer<T> ser = data.newSerializer();
-		try {
-			for(T e : list)
-				ser.write(e);
-		} finally {
-			ser.close();
-		}
+		Object[] inlen = createDataFile(list);
 
 		synchronized(this) {
 			int index = desers.size();
 			long start = cache.length();
-			long stop = start + tmp.length();
+			long stop = start + (Long) inlen[1];
 
-			OutputStream out = new FileOutputStream(cache, true);
+			InputStream in = (InputStream) inlen[0];
 			try {
-				InputStream in = new FileInputStream(tmp);
+				OutputStream out = new FileOutputStream(cache, true);
 				try {
 					byte[] buf = new byte[8192];
 					for(int r = in.read(buf); r != -1; r = in.read(buf))
 						out.write(buf, 0, r);
 				} finally {
-					in.close();
+					out.close();
 				}
 			} finally {
-				out.close();
+				in.close();
 			}
 
 			desers.add(new DataFileDeserializer<T>(new FileSeekingInput(cache, start, stop), serde, type));
 			addIndex(start, stop);
 
-			tmp.delete();
-			
 			return index;
 		}
 	}
