@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.ssf4j.Exceptions;
@@ -121,7 +122,7 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 			throw new IllegalStateException(this + " closed");
 
 
-		File tmp = File.createTempFile(cache.getName(), ".tmp");
+		File tmp = new File(System.getProperty("java.io.tmpdir"), cache.getName() + "." + UUID.randomUUID() + ".tmp");
 		DataFile<T> data = new DataFile<T>(tmp, serde, type);
 		DataFileSerializer<T> ser = data.newSerializer();
 		try {
