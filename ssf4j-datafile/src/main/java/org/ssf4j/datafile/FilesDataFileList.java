@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.ssf4j.Exceptions;
 import org.ssf4j.Serialization;
@@ -33,12 +34,12 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 	 * File that holds the indexes of the data
 	 */
 	protected File index;
-	
+
 	/**
 	 * The {@link DataFileDeserializer}s already in the list
 	 */
 	protected List<DataFileDeserializer<T>> desers;
-	
+
 	/**
 	 * The {@link Serialization} to use
 	 */
@@ -47,12 +48,12 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 	 * The class of object being stored
 	 */
 	protected Class<T> type;
-	
+
 	/**
 	 * Whether this list has been closed
 	 */
 	protected boolean closed;
-	
+
 	/**
 	 * Create a new {@link FilesDataFileList}
 	 * @param cache
@@ -67,12 +68,12 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 		this.serde = serde;
 		this.type = type;
 
-		desers = new ArrayList<DataFileDeserializer<T>>();
-		
+		desers = new CopyOnWriteArrayList<DataFileDeserializer<T>>();
+
 		if(index.canRead())
 			readIndex();
 	}
-	
+
 	/**
 	 * Read an existing index file and create deserializers for it
 	 * @throws IOException
@@ -92,7 +93,7 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 			data.close();
 		}
 	}
-	
+
 	/**
 	 * Add an entry to the index, creating if necessary
 	 * @param start
@@ -108,19 +109,18 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 			data.close();
 		}
 	}
-	
+
 	/**
 	 * Append another list of data to this list
 	 * @param list
 	 * @return
 	 * @throws IOException
 	 */
-	public synchronized int append(List<T> list) throws IOException {
+	public int append(List<T> list) throws IOException {
 		if(closed)
 			throw new IllegalStateException(this + " closed");
-		
-		int index = desers.size();
-		
+
+
 		File tmp = File.createTempFile(cache.getName(), ".tmp");
 		DataFile<T> data = new DataFile<T>(tmp, serde, type);
 		DataFileSerializer<T> ser = data.newSerializer();
@@ -130,55 +130,58 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 		} finally {
 			ser.close();
 		}
-		
-		long start = cache.length();
-		long stop = start + tmp.length();
-		
-		OutputStream out = new FileOutputStream(cache, true);
-		try {
-			InputStream in = new FileInputStream(tmp);
+
+		synchronized(this) {
+			int index = desers.size();
+			long start = cache.length();
+			long stop = start + tmp.length();
+
+			OutputStream out = new FileOutputStream(cache, true);
 			try {
-				byte[] buf = new byte[8192];
-				for(int r = in.read(buf); r != -1; r = in.read(buf))
-					out.write(buf, 0, r);
+				InputStream in = new FileInputStream(tmp);
+				try {
+					byte[] buf = new byte[8192];
+					for(int r = in.read(buf); r != -1; r = in.read(buf))
+						out.write(buf, 0, r);
+				} finally {
+					in.close();
+				}
 			} finally {
-				in.close();
+				out.close();
 			}
-		} finally {
-			out.close();
+
+			desers.add(new DataFileDeserializer<T>(new FileSeekingInput(cache, start, stop), serde, type));
+			addIndex(start, stop);
+
+			tmp.delete();
+			
+			return index;
 		}
-		
-		desers.add(new DataFileDeserializer<T>(new FileSeekingInput(cache, start, stop), serde, type));
-		addIndex(start, stop);
-		
-		tmp.delete();
-		
-		return index;
 	}
-	
+
 	@Override
-	public synchronized void close() throws IOException {
+	public void close() throws IOException {
 		closed = true;
 		for(DataFileDeserializer<T> des : desers)
 			des.close();
 	}
 
 	@Override
-	public synchronized List<T> get(int index) {
+	public List<T> get(int index) {
 		if(closed)
 			throw new IllegalStateException(this + " closed");
 		return desers.get(index);
 	}
 
 	@Override
-	public synchronized int size() {
+	public int size() {
 		if(closed)
 			throw new IllegalStateException(this + " closed");
 		return desers.size();
 	}
-	
+
 	@Override
-	public synchronized boolean add(List<T> e) {
+	public boolean add(List<T> e) {
 		try {
 			append(e);
 			return true;
