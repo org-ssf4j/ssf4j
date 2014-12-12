@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.ssf4j.Serialization;
@@ -19,7 +21,7 @@ public class CachingFilesDataFileList<T> extends FilesDataFileList<T> {
 	/**
 	 * The list caches
 	 */
-	protected List<ImmutableListCache<T>> cachingLists;
+	protected Map<Integer, ImmutableListCache<T>> cachingLists;
 	
 	/**
 	 * Create a new {@link CachingFilesDataFileList}
@@ -33,23 +35,23 @@ public class CachingFilesDataFileList<T> extends FilesDataFileList<T> {
 	public CachingFilesDataFileList(File cache, File index, Serialization serde, Class<T> type) throws IOException {
 		super(cache, index, serde, type);
 		if(cachingLists == null)
-			cachingLists = new CopyOnWriteArrayList<ImmutableListCache<T>>();
+			cachingLists = new ConcurrentHashMap<Integer, ImmutableListCache<T>>();
 	}
 
 	@Override
 	protected void readIndex() throws IOException {
 		super.readIndex();
-		cachingLists = new CopyOnWriteArrayList<ImmutableListCache<T>>();
+		cachingLists = new ConcurrentHashMap<Integer, ImmutableListCache<T>>();
 		// Add a caching list for each read DFD
 		for(DataFileDeserializer<T> des : super.desers)
-			cachingLists.add(new ImmutableListCache<T>(des));
+			cachingLists.put(cachingLists.size(), new ImmutableListCache<T>(des));
 	}
 
 	@Override
 	public int append(List<T> list) throws IOException {
 		int index = super.append(list);
 		// Add a caching list for the new DFD
-		cachingLists.add(new ImmutableListCache<T>(super.get(index)));
+		cachingLists.put(index, new ImmutableListCache<T>(super.get(index)));
 		return index;
 	}
 
