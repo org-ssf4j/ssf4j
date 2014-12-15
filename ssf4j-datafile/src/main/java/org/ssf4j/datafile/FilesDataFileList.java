@@ -1,5 +1,6 @@
 package org.ssf4j.datafile;
 
+import java.io.BufferedOutputStream;
 import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -150,7 +151,7 @@ public class FilesDataFileList<T> extends AbstractList<List<T>> implements Close
 
 			InputStream in = (InputStream) inlen[0];
 			try {
-				OutputStream out = new FileOutputStream(cache, true);
+				OutputStream out = new BufferedOutputStream(new FileOutputStream(cache, true), 256 * 1024);
 				try {
 					byte[] buf = new byte[8192];
 					for(int r = in.read(buf); r != -1; r = in.read(buf))
