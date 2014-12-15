@@ -30,6 +30,10 @@ public class DataFileDeserializer<T> extends AbstractList<T> implements Deserial
 		size = loadSize();
 	}
 	
+	public SeekingInput getFile() {
+		return file;
+	}
+	
 	protected int loadSize() throws IOException {
 		byte[] b = new byte[8];
 		file.seek(file.capacity());

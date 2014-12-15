@@ -27,6 +27,10 @@ public class ImmutableListCache<T> extends AbstractList<T> {
 		
 		size = wrapped.size();
 	}
+	
+	public List<T> getWrapped() {
+		return wrapped;
+	}
 
 	protected void cleanup() {
 		for(Reference<? extends T> ref = refq.poll(); ref != null; ref = refq.poll()) {
