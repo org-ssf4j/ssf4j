@@ -48,6 +48,18 @@ public class FileSeekingInput implements SeekingInput {
 		seek(0);
 	}
 	
+	public RandomAccessFile getFile() {
+		return file;
+	}
+	
+	public long getStart() {
+		return start;
+	}
+	
+	public long getStop() {
+		return stop;
+	}
+	
 	/**
 	 * Return the number of remaining bytes
 	 * @return

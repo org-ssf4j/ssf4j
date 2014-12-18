@@ -31,9 +31,22 @@ public class DataFileSerializer<T> implements Serializer<T> {
 		this.type = type;
 		
 		cout = new CountingOutputStream(out);
+		dbuf = createDbuf();
+		dbuf.writeLong(-1);
+	}
+	
+	protected DataOutputStream createDbuf() throws IOException {
 		offsets = File.createTempFile("offsets", ".tmp");
 		dbuf = new DataOutputStream(new FileOutputStream(offsets));
-		dbuf.writeLong(-1);
+		return dbuf;
+	}
+	
+	protected InputStream readDbuf() throws IOException {
+		return new FileInputStream(offsets);
+	}
+	
+	protected void deleteDbuf() throws IOException {
+		offsets.delete();
 	}
 	
 	@Override
@@ -45,12 +58,12 @@ public class DataFileSerializer<T> implements Serializer<T> {
 	public void close() throws IOException {
 		flush();
 		dbuf.close();
-		InputStream offin = new FileInputStream(offsets);
+		InputStream offin = readDbuf();
 		byte[] buf = new byte[8192];
 		for(int r = offin.read(buf); r != -1; r = offin.read(buf))
 			cout.write(buf, 0, r);
 		offin.close();
-		offsets.delete();
+		deleteDbuf();
 		cout.flush();
 		out.close();
 	}
