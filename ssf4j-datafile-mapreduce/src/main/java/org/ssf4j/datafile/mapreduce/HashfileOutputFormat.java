@@ -177,6 +177,9 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 			Path keysTempPath = getKeysTempOutputPath(taskContext);
 			Path valuesTempPath = getValuesTempOutputPath(taskContext);
 			
+			keysTempPath.getFileSystem(taskContext.getConfiguration()).mkdirs(keysTempPath.getParent());
+			valuesTempPath.getFileSystem(taskContext.getConfiguration()).mkdirs(valuesTempPath.getParent());
+			
 			keysTempPath.getFileSystem(c).delete(keysTempPath, false);
 			valuesTempPath.getFileSystem(c).delete(valuesTempPath, false);
 		}

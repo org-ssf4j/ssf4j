@@ -160,6 +160,8 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 			
 			Path valuesTempPath = getValuesTempOutputPath(taskContext);
 			
+			valuesTempPath.getFileSystem(taskContext.getConfiguration()).mkdirs(valuesTempPath.getParent());
+			
 			valuesTempPath.getFileSystem(c).delete(valuesTempPath, false);
 		}
 	
