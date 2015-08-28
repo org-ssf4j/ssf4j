@@ -1,0 +1,127 @@
+package org.ssf4j.datafile.mapreduce;
+
+import java.io.IOException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.mapreduce.InputSplit;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.RecordReader;
+import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
+import org.ssf4j.Deserializer;
+import org.ssf4j.Serialization;
+import org.ssf4j.Serializations;
+import org.ssf4j.datafile.hadoop.HashfilePosition;
+import org.ssf4j.datafile.hashfile.ByteArrays;
+
+public class HashfileValuesInputFormat<V> extends FileInputFormat<HashfilePosition, V> {
+	private static final String PREFIX = HashfileValuesInputFormat.class.getName();
+	
+	public static final String SERIALIZATION_CLASS_KEY = PREFIX + ".serialization_class";
+	public static final String VALUE_TYPE_KEY = PREFIX + ".value_type";
+
+	public static final String DEFAULT_SERIALIZATION_CLASS = Serializations.AVRO_BINARY;
+
+	public static void setSerializationClassName(Job job, String serializationClassName) {
+		job.getConfiguration().set(SERIALIZATION_CLASS_KEY, serializationClassName);
+	}
+	
+	public static void setSerializationClass(Job job, Class<? extends Serialization> serializationClass) {
+		if(serializationClass.isInterface())
+			throw new IllegalArgumentException();
+		job.getConfiguration().setClass(SERIALIZATION_CLASS_KEY, serializationClass, Serialization.class);
+	}
+	
+	public static void setValueType(Job job, Class<?> valueType) {
+		job.getConfiguration().set(VALUE_TYPE_KEY, valueType.getName());
+	}
+	
+	protected static String getSerializationClassName(Configuration c) {
+		return c.get(SERIALIZATION_CLASS_KEY, DEFAULT_SERIALIZATION_CLASS);
+	}
+	
+	protected static Class<? extends Serialization> getSerializationClass(Configuration c) {
+		return c.getClass(SERIALIZATION_CLASS_KEY, c.getClassByNameOrNull(DEFAULT_SERIALIZATION_CLASS).asSubclass(Serialization.class), Serialization.class);
+	}
+	
+	protected static Class<?> getValueType(Configuration c) {
+		return c.getClass(VALUE_TYPE_KEY, null);
+	}
+	
+	@Override
+	public RecordReader<HashfilePosition, V> createRecordReader(InputSplit split, TaskAttemptContext context)
+			throws IOException, InterruptedException {
+		return new HashfileRecordReader<V>();
+	}
+	
+	protected static class HashfileRecordReader<V> extends RecordReader<HashfilePosition, V> {
+		protected FSDataInputStream in;
+		protected FileSplit split;
+
+		protected Serialization serde;
+		protected Class<V> valueType;
+		
+		protected HashfilePosition currentKey;
+		protected V currentValue;
+		
+		@SuppressWarnings("unchecked")
+		@Override
+		public void initialize(InputSplit s, TaskAttemptContext context) throws IOException, InterruptedException {
+			serde = Serializations.get(getSerializationClassName(context.getConfiguration()));
+			valueType = (Class<V>) getValueType(context.getConfiguration());
+			
+			split = (FileSplit) s;
+			in = split.getPath().getFileSystem(context.getConfiguration()).open(split.getPath());
+			while(in.getPos() < split.getStart())
+				skipKeyValue();
+		}
+
+		protected void skipKeyValue() throws IOException {
+			byte[] lbytes = new byte[ByteArrays.LENGTH_LONG];
+			in.readFully(lbytes);
+			long vlen = ByteArrays.toLong(lbytes, 0);
+			in.skip(vlen);
+		}
+		
+		@Override
+		public boolean nextKeyValue() throws IOException, InterruptedException {
+			if(in.getPos() >= split.getStart() + split.getLength())
+				return false;
+			long position = in.getPos();
+			
+			currentKey = new HashfilePosition(split.getPath().toString(), position);
+			
+			byte[] lbytes = new byte[ByteArrays.LENGTH_LONG];
+			in.readFully(lbytes);
+			long vlen = ByteArrays.toLong(lbytes, 0);
+			
+			Deserializer<V> vdes = serde.newDeserializer(in, valueType);
+			currentValue = vdes.read();
+			
+			in.seek(position + ByteArrays.LENGTH_LONG + vlen);
+			
+			return true;
+		}
+
+		@Override
+		public HashfilePosition getCurrentKey() throws IOException, InterruptedException {
+			return currentKey;
+		}
+
+		@Override
+		public V getCurrentValue() throws IOException, InterruptedException {
+			return currentValue;
+		}
+
+		@Override
+		public float getProgress() throws IOException, InterruptedException {
+			return (in.getPos() - split.getStart()) / (float) split.getLength();
+		}
+
+		@Override
+		public void close() throws IOException {
+			in.close();
+		}
+	}
+}

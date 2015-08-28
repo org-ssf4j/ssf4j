@@ -1,6 +1,7 @@
 package org.ssf4j.datafile.hadoop;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -8,6 +9,7 @@ import org.ssf4j.Serialization;
 import org.ssf4j.Serializations;
 import org.ssf4j.datafile.SeekingInput;
 import org.ssf4j.datafile.hashfile.HashFileReader;
+import org.ssf4j.datafile.hashfile.HashPosition;
 import org.ssf4j.datafile.hashfile.MessageDigestUtil;
 
 public class HashfilePositionLoader<V> {
@@ -26,14 +28,12 @@ public class HashfilePositionLoader<V> {
 	}
 	
 	public V load(HashfilePosition hp) throws IOException {
-		Path keysPath = new Path(hp.getKeysPath().toString());
-		Path valuesPath = new Path(hp.getValuesPath().toString());
+		Path path = new Path(hp.getPath().toString());
 		
-		SeekingInput keysIn = new PathSeekingInput(keysPath, conf);
-		SeekingInput valuesIn = new PathSeekingInput(valuesPath, conf);
+		SeekingInput in = new PathSeekingInput(path, conf);
 		
-		HashFileReader<?, V> reader = new HashFileReader<Object, V>(MessageDigestUtil.SHA1, serde, Object.class, valueType, keysIn, valuesIn);
-		V value = reader.getByHash(hp.getKeyHash().bytes());
+		HashFileReader<?, V> reader = new HashFileReader<Object, V>(MessageDigestUtil.SHA1, serde, Object.class, valueType, (List<HashPosition>) null, in);
+		V value = reader.getByPosition(hp.getOffset());
 		reader.close();
 		
 		return value;

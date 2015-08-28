@@ -53,31 +53,31 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 	}
 	
 	protected static Path getOutputPath(Configuration c, String suffix, int taskId) {
-		return new Path(c.get(OUTPUT_PATH_KEY) + "_" + taskId + "." + suffix);
+		return new Path(c.get(OUTPUT_PATH_KEY) + taskId + suffix);
 	}
 	
 	protected static Path getKeysOutputPath(TaskAttemptContext ctx) {
-		return getOutputPath(ctx, "keys");
+		return getOutputPath(ctx, ".keys");
 	}
 	
 	protected static Path getValuesOutputPath(TaskAttemptContext ctx) {
-		return getOutputPath(ctx, "values");
+		return getOutputPath(ctx, ".values");
 	}
 	
 	protected static Path getKeysOutputPath(Configuration c, int taskId) {
-		return getOutputPath(c, "keys", taskId);
+		return getOutputPath(c, ".keys", taskId);
 	}
 	
 	protected static Path getValuesOutputPath(Configuration c, int taskId) {
-		return getOutputPath(c, "values", taskId);
+		return getOutputPath(c, ".values", taskId);
 	}
 	
 	protected static Path getKeysTempOutputPath(TaskAttemptContext ctx) {
-		return getOutputPath(ctx, "keys.tmp");
+		return getOutputPath(ctx, ".keys.tmp");
 	}
 	
 	protected static Path getValuesTempOutputPath(TaskAttemptContext ctx) {
-		return getOutputPath(ctx, "values.tmp");
+		return getOutputPath(ctx, ".values.tmp");
 	}
 	
 	protected static String getSerializationClassName(Configuration c) {

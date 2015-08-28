@@ -187,6 +187,33 @@ public class HashFileReader<K, V> implements Closeable {
 		return value;
 	}
 	
+	/**
+	 * Returns the value found at the given position.  Does not verify that the
+	 * position is a valid position.
+	 * @param pos The position in the values file
+	 * @return The value at that position
+	 * @throws IOException
+	 */
+	public V getByPosition(long pos) throws IOException {
+		valuesIn.seek(pos);
+		
+		byte[] lbytes = new byte[ByteArrays.LENGTH_LONG];
+		valuesIn.readFully(lbytes);
+		
+		valuesIn.seek(pos + ByteArrays.LENGTH_LONG);
+		long vlen = ByteArrays.toLong(lbytes, 0);
+		InputStream in = new SeekingInputInputStream(valuesIn, vlen);
+		
+		Deserializer<V> vdes = serde.newDeserializer(in, valueType);
+		V value = vdes.read();
+		
+		return value;
+	}
+	
+	public int size() {
+		return keys.size();
+	}
+	
 	@Override
 	public void close() throws IOException {
 		if(closed)
