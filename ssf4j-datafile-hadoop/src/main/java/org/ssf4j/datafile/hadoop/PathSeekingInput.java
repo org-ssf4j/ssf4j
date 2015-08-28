@@ -2,7 +2,6 @@ package org.ssf4j.datafile.hadoop;
 
 import java.io.IOException;
 
-import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
