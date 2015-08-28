@@ -2,6 +2,7 @@ package org.ssf4j.datafile.mapreduce;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -125,7 +126,11 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 			
 			Path valuesPath = getValuesTempOutputPath(context);
 			
-			valuesOut = valuesPath.getFileSystem(c).create(valuesPath, true);
+			OutputStream out = valuesPath.getFileSystem(c).create(valuesPath, true);
+			out = new GZIPOutputStream(out);
+			
+			valuesOut = out;
+			
 			valueType = (Class<V>) getValueType(c);
 			serde = Serializations.get(getSerializationClassName(c));
 			ser = serde.newSerializer(valuesOut, valueType);

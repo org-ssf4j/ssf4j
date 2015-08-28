@@ -1,6 +1,12 @@
 package org.ssf4j.datafile.mapreduce;
 
+import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
+
+import org.apache.commons.io.input.CountingInputStream;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.mapreduce.InputSplit;
@@ -56,11 +62,13 @@ public class ValuefileInputFormat<V> extends FileInputFormat<ValuefilePosition, 
 	}
 	
 	protected static class HashfileRecordReader<V> extends RecordReader<ValuefilePosition, V> {
-		protected FSDataInputStream in;
+		protected CountingInputStream counting;
+		protected DataInputStream data;
 		protected FileSplit split;
 
 		protected Serialization serde;
 		protected Class<V> valueType;
+		protected Deserializer<V> vdes;
 		
 		protected ValuefilePosition currentKey;
 		protected V currentValue;
@@ -72,34 +80,33 @@ public class ValuefileInputFormat<V> extends FileInputFormat<ValuefilePosition, 
 			valueType = (Class<V>) getValueType(context.getConfiguration());
 			
 			split = (FileSplit) s;
-			in = split.getPath().getFileSystem(context.getConfiguration()).open(split.getPath());
-			while(in.getPos() < split.getStart())
+			InputStream in = split.getPath().getFileSystem(context.getConfiguration()).open(split.getPath());
+			in = new GZIPInputStream(in);
+			counting = new CountingInputStream(in);
+			data = new DataInputStream(counting);
+			vdes = serde.newDeserializer(data, valueType);
+			while(counting.getByteCount() < split.getStart())
 				skipKeyValue();
 		}
 
 		protected void skipKeyValue() throws IOException {
 			byte[] lbytes = new byte[ByteArrays.LENGTH_LONG];
-			in.readFully(lbytes);
+			data.readFully(lbytes);
 			long vlen = ByteArrays.toLong(lbytes, 0);
-			in.skip(vlen);
+			data.skip(vlen);
 		}
 		
 		@Override
 		public boolean nextKeyValue() throws IOException, InterruptedException {
-			if(in.getPos() >= split.getStart() + split.getLength())
+			if(counting.getByteCount() >= split.getStart() + split.getLength())
 				return false;
-			long position = in.getPos();
+			long position = counting.getByteCount();
 			
 			currentKey = new ValuefilePosition(split.getPath().toString(), position);
+
+			data.skip(ByteArrays.LENGTH_LONG);
 			
-			byte[] lbytes = new byte[ByteArrays.LENGTH_LONG];
-			in.readFully(lbytes);
-			long vlen = ByteArrays.toLong(lbytes, 0);
-			
-			Deserializer<V> vdes = serde.newDeserializer(in, valueType);
 			currentValue = vdes.read();
-			
-			in.seek(position + ByteArrays.LENGTH_LONG + vlen);
 			
 			return true;
 		}
@@ -116,12 +123,12 @@ public class ValuefileInputFormat<V> extends FileInputFormat<ValuefilePosition, 
 
 		@Override
 		public float getProgress() throws IOException, InterruptedException {
-			return (in.getPos() - split.getStart()) / (float) split.getLength();
+			return Math.max((counting.getByteCount() - split.getStart()) / (float) split.getLength(), 1f);
 		}
 
 		@Override
 		public void close() throws IOException {
-			in.close();
+			data.close();
 		}
 	}
 }
