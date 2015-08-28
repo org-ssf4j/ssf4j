@@ -22,6 +22,7 @@
 		<module>../ssf4j-xstream</module>
 		<module>../ssf4j-datafile</module>
 		<module>../ssf4j-datafile-hadoop</module>
+		<module>../ssf4j-datafile-mapreduce</module>
 	</modules>
 	<build>
 		<pluginManagement>

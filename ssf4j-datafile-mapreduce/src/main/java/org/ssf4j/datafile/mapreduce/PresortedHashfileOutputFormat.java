@@ -1,4 +1,4 @@
-package org.ssf4j.datafile.hadoop;
+package org.ssf4j.datafile.mapreduce;
 
 import java.io.IOException;
 
