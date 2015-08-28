@@ -159,6 +159,34 @@ public class HashFileReader<K, V> implements Closeable {
 		return value;
 	}
 
+	/**
+	 * Returns the value associated with a given hash, or {@code null} if there is no such hash
+	 * @param khash The hash
+	 * @return The value associated with the hash, or {@code null} if there is no such hash
+	 * @throws IOException
+	 */
+	public V getByHash(byte[] khash) throws IOException {
+		HashPosition hp = new HashPosition(khash, 0);
+		int hpi = keys.indexOf(hp);
+		if(hpi < 0)
+			return null;
+		hp = keys.get(hpi);
+		
+		valuesIn.seek(hp.getPosition());
+		
+		byte[] lbytes = new byte[ByteArrays.LENGTH_LONG];
+		valuesIn.readFully(lbytes);
+		
+		valuesIn.seek(hp.getPosition() + ByteArrays.LENGTH_LONG);
+		long vlen = ByteArrays.toLong(lbytes, 0);
+		InputStream in = new SeekingInputInputStream(valuesIn, vlen);
+		
+		Deserializer<V> vdes = serde.newDeserializer(in, valueType);
+		V value = vdes.read();
+		
+		return value;
+	}
+	
 	@Override
 	public void close() throws IOException {
 		if(closed)
