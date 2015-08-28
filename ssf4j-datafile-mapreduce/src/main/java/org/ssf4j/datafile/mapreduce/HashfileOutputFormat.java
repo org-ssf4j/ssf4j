@@ -20,20 +20,14 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 	private static final String PREFIX = HashfileOutputFormat.class.getName();
 	
 	public static final String OUTPUT_PATH_KEY = PREFIX + ".output_path";
-	public static final String MESSAGE_DIGEST_KEY = PREFIX + ".message_digest";
 	public static final String SERIALIZATION_CLASS_KEY = PREFIX + ".serialization_class";
 	public static final String KEY_TYPE_KEY = PREFIX + ".key_type";
 	public static final String VALUE_TYPE_KEY = PREFIX + ".value_type";
 	
-	public static final String DEFAULT_MESSAGE_DIGEST = MessageDigestUtil.SHA1_DIGEST_NAME;
 	public static final String DEFAULT_SERIALIZATION_CLASS = Serializations.AVRO_BINARY;
 
 	public static void setOutputPath(Job job, Path outputPath) {
 		job.getConfiguration().set(OUTPUT_PATH_KEY, outputPath.toString());
-	}
-	
-	public static void setMessageDigest(Job job, String messageDigest) {
-		job.getConfiguration().set(MESSAGE_DIGEST_KEY, messageDigest);
 	}
 	
 	public static void setSerializationClassName(Job job, String serializationClassName) {
@@ -86,10 +80,6 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 		return getOutputPath(ctx, "values.tmp");
 	}
 	
-	protected static String getMessageDigest(Configuration c) {
-		return c.get(MESSAGE_DIGEST_KEY, DEFAULT_MESSAGE_DIGEST);
-	}
-	
 	protected static String getSerializationClassName(Configuration c) {
 		return c.get(SERIALIZATION_CLASS_KEY, DEFAULT_SERIALIZATION_CLASS);
 	}
@@ -116,11 +106,6 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 		Configuration c = context.getConfiguration();
 		if(c.get(OUTPUT_PATH_KEY) == null)
 			throw new IOException(OUTPUT_PATH_KEY + " not specified");
-		try {
-			new MessageDigestUtil(getMessageDigest(c));
-		} catch(Exception e) {
-			throw new IOException("MessageDigest not found: " + getMessageDigest(c));
-		}
 		try {
 			Class<?> cls = getSerializationClass(c);
 			if(cls.isInterface())
@@ -165,7 +150,7 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 			OutputStream valuesOut = valuesPath.getFileSystem(c).create(valuesPath, true);
 			
 			writer = new HashFileWriter<K, V>(
-					new MessageDigestUtil(getMessageDigest(c)), 
+					MessageDigestUtil.SHA1, 
 					Serializations.get(getSerializationClassName(c)), 
 					(Class<K>) getKeyType(c), 
 					(Class<V>) getValueType(c), 

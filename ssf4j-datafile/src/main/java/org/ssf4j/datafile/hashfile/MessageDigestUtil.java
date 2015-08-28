@@ -19,6 +19,16 @@ public class MessageDigestUtil {
 	public static final String MD5_DIGEST_NAME = "MD5";
 	
 	/**
+	 * {@link MessageDigestUtil} for SHA-1
+	 */
+	public static final MessageDigestUtil SHA1 = new MessageDigestUtil(SHA1_DIGEST_NAME);
+	
+	/**
+	 * {@link MessageDigestUtil} for MD5
+	 */
+	public static final MessageDigestUtil MD5 = new MessageDigestUtil(MD5_DIGEST_NAME);
+	
+	/**
 	 * The name of the {@link MessageDigest} to use
 	 */
 	private String digestName;

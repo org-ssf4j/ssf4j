@@ -17,29 +17,19 @@ import org.ssf4j.datafile.hashfile.NullOutputStream;
 public abstract class HashfileKeyComparator<T> implements RawComparator<T> {
 
 	protected Class<T> keyType;
-	protected MessageDigestUtil mdu;
 	protected Serialization serde;
 	
 	public HashfileKeyComparator(Class<T> keyType) {
-		this(keyType, new MessageDigestUtil(MessageDigestUtil.SHA1_DIGEST_NAME), Serializations.get(Serializations.AVRO_BINARY));
+		this(keyType, Serializations.get(Serializations.AVRO_BINARY));
 	}
 	
 	public HashfileKeyComparator(Class<T> keyType, Serialization serde) {
-		this(keyType, new MessageDigestUtil(MessageDigestUtil.SHA1_DIGEST_NAME), serde);
-	}
-	
-	public HashfileKeyComparator(Class<T> keyType, MessageDigestUtil mdu) {
-		this(keyType, mdu, Serializations.get(Serializations.AVRO_BINARY));
-	}
-	
-	public HashfileKeyComparator(Class<T> keyType, MessageDigestUtil mdu, Serialization serde) {
 		this.keyType = keyType;
-		this.mdu = mdu;
 		this.serde = serde;
 	}
 	
 	protected byte[] toHash(T key) {
-		DigestOutputStream dout = new DigestOutputStream(NullOutputStream.get(), mdu.createDigest());
+		DigestOutputStream dout = new DigestOutputStream(NullOutputStream.get(), MessageDigestUtil.SHA1.createDigest());
 		
 		try {
 			Serializer<T> kser = serde.newSerializer(dout, keyType);
