@@ -1,0 +1,10 @@
+{
+	"type": "record",
+	"name": "HashfilePosition",
+	"namespace": "org.ssf4j.datafile.hadoop",
+	"fields": [
+		{"name": "keys_path", "type": "string"},
+		{"name": "values_path", "type": "string"},
+		{"name": "key_hash", "type": {"type": "fixed", "size": 20, "name": "HashfilePositionHash"}}	
+	]
+}
