@@ -7,7 +7,7 @@ import java.util.Comparator;
  * @author robin
  *
  */
-class ByteArrays {
+public class ByteArrays {
 	/**
 	 * Comparator for unsigned ordering of byte arrays
 	 */

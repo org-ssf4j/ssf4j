@@ -9,7 +9,7 @@ import java.io.OutputStream;
  * @author robin
  *
  */
-class CountingOutputStream extends FilterOutputStream {
+public class CountingOutputStream extends FilterOutputStream {
 
 	/**
 	 * The number of bytes written so far

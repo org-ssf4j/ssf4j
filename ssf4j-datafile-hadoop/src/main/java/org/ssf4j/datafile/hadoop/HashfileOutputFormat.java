@@ -24,6 +24,9 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 	public static final String SERIALIZATION_CLASS_KEY = PREFIX + ".serialization_class";
 	public static final String KEY_TYPE_KEY = PREFIX + ".key_type";
 	public static final String VALUE_TYPE_KEY = PREFIX + ".value_type";
+	
+	public static final String DEFAULT_MESSAGE_DIGEST = MessageDigestUtil.SHA1_DIGEST_NAME;
+	public static final String DEFAULT_SERIALIZATION_CLASS = Serializations.AVRO_BINARY;
 
 	public static void setOutputPath(Job job, Path outputPath) {
 		job.getConfiguration().set(OUTPUT_PATH_KEY, outputPath.toString());
@@ -84,11 +87,15 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 	}
 	
 	protected static String getMessageDigest(Configuration c) {
-		return c.get(MESSAGE_DIGEST_KEY);
+		return c.get(MESSAGE_DIGEST_KEY, DEFAULT_MESSAGE_DIGEST);
 	}
 	
 	protected static String getSerializationClassName(Configuration c) {
-		return c.get(SERIALIZATION_CLASS_KEY);
+		return c.get(SERIALIZATION_CLASS_KEY, DEFAULT_SERIALIZATION_CLASS);
+	}
+	
+	protected static Class<? extends Serialization> getSerializationClass(Configuration c) {
+		return c.getClass(SERIALIZATION_CLASS_KEY, c.getClassByNameOrNull(DEFAULT_SERIALIZATION_CLASS).asSubclass(Serialization.class), Serialization.class);
 	}
 	
 	protected static Class<?> getKeyType(Configuration c) {
@@ -109,13 +116,18 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 		Configuration c = context.getConfiguration();
 		if(c.get(OUTPUT_PATH_KEY) == null)
 			throw new IOException(OUTPUT_PATH_KEY + " not specified");
-		if(c.get(MESSAGE_DIGEST_KEY) == null)
-			throw new IOException(MESSAGE_DIGEST_KEY + " not specified");
-		Class<?> cls;
-		if((cls = c.getClass(SERIALIZATION_CLASS_KEY, null)) == null)
-			throw new IOException(SERIALIZATION_CLASS_KEY + " not specified");
-		if(cls.isInterface())
-			throw new IOException(SERIALIZATION_CLASS_KEY + "=" + cls.getName() + " is an interface");
+		try {
+			new MessageDigestUtil(getMessageDigest(c));
+		} catch(Exception e) {
+			throw new IOException("MessageDigest not found: " + getMessageDigest(c));
+		}
+		try {
+			Class<?> cls = getSerializationClass(c);
+			if(cls.isInterface())
+				throw new RuntimeException();
+		} catch(Exception e) {
+			throw new IOException("Invalid serialization class: " + getSerializationClassName(c));
+		}
 		if(c.getClass(KEY_TYPE_KEY, null) == null)
 			throw new IOException(KEY_TYPE_KEY + " not specified");
 		if(c.getClass(VALUE_TYPE_KEY, null) == null)

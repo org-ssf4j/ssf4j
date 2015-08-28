@@ -8,7 +8,7 @@ import java.io.OutputStream;
  * @author robin
  *
  */
-class NullOutputStream extends OutputStream {
+public class NullOutputStream extends OutputStream {
 
 	/**
 	 * Re-used instance
