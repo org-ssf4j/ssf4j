@@ -17,8 +17,6 @@ import org.ssf4j.Serializations;
 import org.ssf4j.Serializer;
 import org.ssf4j.datafile.hashfile.ByteArrays;
 import org.ssf4j.datafile.hashfile.CountingOutputStream;
-import org.ssf4j.datafile.hashfile.HashFileWriter;
-import org.ssf4j.datafile.hashfile.MessageDigestUtil;
 import org.ssf4j.datafile.hashfile.NullOutputStream;
 
 public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
