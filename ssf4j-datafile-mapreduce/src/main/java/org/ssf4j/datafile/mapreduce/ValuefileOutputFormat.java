@@ -80,7 +80,7 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 	
 	@Override
 	public RecordWriter<NullWritable, V> getRecordWriter(TaskAttemptContext context) throws IOException, InterruptedException {
-		return new HashfileRecordWriter<V>(context);
+		return new ValuefileRecordWriter<V>(context);
 	}
 
 	@Override
@@ -109,15 +109,16 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 		return new HashfileOutputCommitter();
 	}
 
-	protected static class HashfileRecordWriter<V> extends RecordWriter<NullWritable, V> {
+	protected static class ValuefileRecordWriter<V> extends RecordWriter<NullWritable, V> {
 		protected TaskAttemptContext context;
 		
 		protected OutputStream valuesOut;
 		protected Class<V> valueType;
 		protected Serialization serde;
+		protected Serializer<V> ser;
 		
 		@SuppressWarnings("unchecked")
-		public HashfileRecordWriter(TaskAttemptContext context) throws IOException {
+		public ValuefileRecordWriter(TaskAttemptContext context) throws IOException {
 			this.context = context;
 			
 			Configuration c = context.getConfiguration();
@@ -125,8 +126,9 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 			Path valuesPath = getValuesTempOutputPath(context);
 			
 			valuesOut = valuesPath.getFileSystem(c).create(valuesPath, true);
-			serde = Serializations.get(getSerializationClassName(c));
 			valueType = (Class<V>) getValueType(c);
+			serde = Serializations.get(getSerializationClassName(c));
+			ser = serde.newSerializer(valuesOut, valueType);
 		}
 		
 		@Override
@@ -142,14 +144,13 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 			ByteArrays.toBytes(lbytes, 0, vlen);
 			valuesOut.write(lbytes);
 
-			vser = serde.newSerializer(valuesOut, valueType);
-			vser.write(value);
-			vser.flush();
+			ser.write(value);
+			ser.flush();
 		}
 
 		@Override
 		public void close(TaskAttemptContext context) throws IOException, InterruptedException {
-			valuesOut.close();
+			ser.close();
 		}
 	}
 
