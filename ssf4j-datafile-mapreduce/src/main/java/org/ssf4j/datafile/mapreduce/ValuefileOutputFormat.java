@@ -51,7 +51,7 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 	}
 	
 	protected static Path getOutputPath(Configuration c, String suffix, int taskId) {
-		return new Path(c.get(OUTPUT_PATH_KEY) + taskId + suffix);
+		return new Path(c.get(OUTPUT_PATH_KEY) + "_" + taskId + suffix);
 	}
 	
 	protected static Path getValuesOutputPath(TaskAttemptContext ctx) {
