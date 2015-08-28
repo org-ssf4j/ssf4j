@@ -12,11 +12,11 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.ssf4j.Deserializer;
 import org.ssf4j.Serialization;
 import org.ssf4j.Serializations;
-import org.ssf4j.datafile.hadoop.HashfilePosition;
+import org.ssf4j.datafile.hadoop.ValuefilePosition;
 import org.ssf4j.datafile.hashfile.ByteArrays;
 
-public class HashfileValuesInputFormat<V> extends FileInputFormat<HashfilePosition, V> {
-	private static final String PREFIX = HashfileValuesInputFormat.class.getName();
+public class ValuefileInputFormat<V> extends FileInputFormat<ValuefilePosition, V> {
+	private static final String PREFIX = ValuefileInputFormat.class.getName();
 	
 	public static final String SERIALIZATION_CLASS_KEY = PREFIX + ".serialization_class";
 	public static final String VALUE_TYPE_KEY = PREFIX + ".value_type";
@@ -50,19 +50,19 @@ public class HashfileValuesInputFormat<V> extends FileInputFormat<HashfilePositi
 	}
 	
 	@Override
-	public RecordReader<HashfilePosition, V> createRecordReader(InputSplit split, TaskAttemptContext context)
+	public RecordReader<ValuefilePosition, V> createRecordReader(InputSplit split, TaskAttemptContext context)
 			throws IOException, InterruptedException {
 		return new HashfileRecordReader<V>();
 	}
 	
-	protected static class HashfileRecordReader<V> extends RecordReader<HashfilePosition, V> {
+	protected static class HashfileRecordReader<V> extends RecordReader<ValuefilePosition, V> {
 		protected FSDataInputStream in;
 		protected FileSplit split;
 
 		protected Serialization serde;
 		protected Class<V> valueType;
 		
-		protected HashfilePosition currentKey;
+		protected ValuefilePosition currentKey;
 		protected V currentValue;
 		
 		@SuppressWarnings("unchecked")
@@ -90,7 +90,7 @@ public class HashfileValuesInputFormat<V> extends FileInputFormat<HashfilePositi
 				return false;
 			long position = in.getPos();
 			
-			currentKey = new HashfilePosition(split.getPath().toString(), position);
+			currentKey = new ValuefilePosition(split.getPath().toString(), position);
 			
 			byte[] lbytes = new byte[ByteArrays.LENGTH_LONG];
 			in.readFully(lbytes);
@@ -105,7 +105,7 @@ public class HashfileValuesInputFormat<V> extends FileInputFormat<HashfilePositi
 		}
 
 		@Override
-		public HashfilePosition getCurrentKey() throws IOException, InterruptedException {
+		public ValuefilePosition getCurrentKey() throws IOException, InterruptedException {
 			return currentKey;
 		}
 

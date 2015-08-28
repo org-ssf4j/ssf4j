@@ -1,6 +1,6 @@
 {
 	"type": "record",
-	"name": "HashfilePosition",
+	"name": "ValuefilePosition",
 	"namespace": "org.ssf4j.datafile.hadoop",
 	"fields": [
 		{"name": "path", "type": "string"},

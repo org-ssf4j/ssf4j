@@ -12,22 +12,22 @@ import org.ssf4j.datafile.hashfile.HashFileReader;
 import org.ssf4j.datafile.hashfile.HashPosition;
 import org.ssf4j.datafile.hashfile.MessageDigestUtil;
 
-public class HashfilePositionLoader<V> {
+public class ValuefilePositionLoader<V> {
 	protected Class<V> valueType;
 	protected Serialization serde;
 	protected Configuration conf;
 	
-	public HashfilePositionLoader(Class<V> valueType, Configuration conf) {
+	public ValuefilePositionLoader(Class<V> valueType, Configuration conf) {
 		this(valueType, conf, Serializations.get(Serializations.AVRO_BINARY));
 	}
 	
-	public HashfilePositionLoader(Class<V> valueType, Configuration conf, Serialization serde) {
+	public ValuefilePositionLoader(Class<V> valueType, Configuration conf, Serialization serde) {
 		this.valueType = valueType;
 		this.serde = serde;
 		this.conf = conf;
 	}
 	
-	public V load(HashfilePosition hp) throws IOException {
+	public V load(ValuefilePosition hp) throws IOException {
 		Path path = new Path(hp.getPath().toString());
 		
 		SeekingInput in = new PathSeekingInput(path, conf);
