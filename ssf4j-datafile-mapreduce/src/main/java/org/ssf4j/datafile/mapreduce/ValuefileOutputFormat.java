@@ -144,7 +144,6 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 
 			vser = serde.newSerializer(valuesOut, valueType);
 			vser.write(value);
-			vser.close();
 		}
 
 		@Override
