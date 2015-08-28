@@ -20,6 +20,11 @@
 			<version>0.4-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			<groupId>org.ssf4j</groupId>
+			<artifactId>ssf4j-avro-binary</artifactId>
+			<version>0.4-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-common</artifactId>
 			<version>2.2.0</version>
