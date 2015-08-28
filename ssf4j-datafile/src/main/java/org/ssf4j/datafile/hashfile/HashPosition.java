@@ -15,7 +15,7 @@ public class HashPosition implements Comparable<HashPosition> {
 		}
 	};
 	
-	public static final int POSITION_SIZE = 8;
+	public static final int POSITION_SIZE = ByteArrays.LENGTH_LONG;
 	
 	private byte[] hash;
 	private long position;

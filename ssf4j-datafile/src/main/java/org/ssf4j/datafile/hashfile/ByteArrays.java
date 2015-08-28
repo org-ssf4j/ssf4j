@@ -2,7 +2,7 @@ package org.ssf4j.datafile.hashfile;
 
 import java.util.Comparator;
 
-public class ByteArrays {
+class ByteArrays {
 	
 	public static final Comparator<byte[]> BYTE_ARRAY_ORDER = new Comparator<byte[]>() {
 		@Override
@@ -24,6 +24,8 @@ public class ByteArrays {
 				return 0;
 		}
 	};
+	
+	public static final int LENGTH_LONG = 8;
 
 	public static void toBytes(byte[] b, int off, long v) {
 		b[off + 0] = (byte) (v >>> 56);

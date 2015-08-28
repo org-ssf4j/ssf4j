@@ -1,5 +1,6 @@
 package org.ssf4j.datafile.hashfile;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.AbstractList;
@@ -11,7 +12,7 @@ import java.util.RandomAccess;
 
 import org.ssf4j.datafile.SeekingInput;
 
-public class HashPositionList extends AbstractList<HashPosition> implements RandomAccess {
+public class HashPositionList extends AbstractList<HashPosition> implements RandomAccess, Closeable {
 	public static void write(List<HashPosition> hashes, OutputStream out) throws IOException {
 		hashes = new ArrayList<HashPosition>(hashes);
 		Collections.sort(hashes);
@@ -55,6 +56,11 @@ public class HashPositionList extends AbstractList<HashPosition> implements Rand
 	}
 	
 	@Override
+	public boolean contains(Object o) {
+		return indexOf(o) >= 0;
+	}
+	
+	@Override
 	public HashPosition get(int index) {
 		try {
 			byte[] b = new byte[hashPersistedSize];
@@ -73,6 +79,11 @@ public class HashPositionList extends AbstractList<HashPosition> implements Rand
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public void close() throws IOException {
+		input.close();
 	}
 	
 	
