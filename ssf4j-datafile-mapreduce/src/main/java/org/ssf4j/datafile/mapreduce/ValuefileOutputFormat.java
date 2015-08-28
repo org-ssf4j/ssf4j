@@ -107,7 +107,7 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 
 	@Override
 	public OutputCommitter getOutputCommitter(TaskAttemptContext context) throws IOException, InterruptedException {
-		return new HashfileOutputCommitter();
+		return new ValuefileOutputCommitter();
 	}
 
 	protected static class ValuefileRecordWriter<V> extends RecordWriter<NullWritable, V> {
@@ -159,7 +159,7 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 		}
 	}
 
-	protected static class HashfileOutputCommitter extends OutputCommitter {
+	protected static class ValuefileOutputCommitter extends OutputCommitter {
 		@Override
 		public void setupTask(TaskAttemptContext taskContext) throws IOException {
 			Configuration c = taskContext.getConfiguration();
