@@ -3,10 +3,22 @@ package org.ssf4j.datafile.hashfile;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * {@link OutputStream} that does nothing
+ * @author robin
+ *
+ */
 class NullOutputStream extends OutputStream {
 
+	/**
+	 * Re-used instance
+	 */
 	private static NullOutputStream instance = new NullOutputStream();
 	
+	/**
+	 * Return a re-usable instance of {@link NullOutputStream}
+	 * @return
+	 */
 	public static NullOutputStream get() {
 		return instance;
 	}

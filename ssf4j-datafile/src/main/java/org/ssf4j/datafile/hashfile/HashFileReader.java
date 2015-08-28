@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.DigestOutputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.ssf4j.Deserializer;
 import org.ssf4j.Serialization;
@@ -12,16 +13,55 @@ import org.ssf4j.Serializer;
 import org.ssf4j.datafile.SeekingInput;
 import org.ssf4j.datafile.SeekingInputInputStream;
 
+/**
+ * Class for reading a hashfile.  Hashfiles are similar to {@link Map}s, but support
+ * either reading (via {@link HashFileReader}) or writing (via {@link HashFileWriter})
+ * but not both.
+ * @author robin
+ *
+ * @param <K> The key type
+ * @param <V> The value type
+ */
 public class HashFileReader<K, V> implements Closeable {
+	/**
+	 * The source of message digests
+	 */
 	private MessageDigestUtil mdu;
+	/**
+	 * {@link Serialization} used for the hashfile
+	 */
 	private Serialization serde;
+	/**
+	 * The key type
+	 */
 	private Class<K> keyType;
+	/**
+	 * The value type
+	 */
 	private Class<V> valueType;
+	/**
+	 * The positions of the values in {@link #valuesIn}
+	 */
 	private List<HashPosition> keys;
+	/**
+	 * The {@link SeekingInput} from which values are read
+	 */
 	private SeekingInput valuesIn;
 	
+	/**
+	 * Whether this {@link HashFileReader} is closed
+	 */
 	private boolean closed;
 	
+	/**
+	 * Create a new {@link HashFileReader}
+	 * @param mdu The source of message digests
+	 * @param serde The {@link Serialization} for the hashfile
+	 * @param keyType The key type
+	 * @param valueType The value type
+	 * @param keysIn {@link SeekingInput} for the key list, as written by {@link HashPositionList#write(java.util.Iterator, java.io.OutputStream)}
+	 * @param valuesIn {@link SeekingInput} containing the value data
+	 */
 	public HashFileReader(
 			MessageDigestUtil mdu, 
 			Serialization serde, 
@@ -32,6 +72,15 @@ public class HashFileReader<K, V> implements Closeable {
 		this(mdu, serde, keyType, valueType, new HashPositionList(keysIn, mdu), valuesIn);
 	}
 	
+	/**
+	 * Create a new {@link HashFileReader}
+	 * @param mdu The source of message digests
+	 * @param serde The {@link Serialization} for the hashfile
+	 * @param keyType The key type
+	 * @param valueType The value type
+	 * @param keys {@link List} of known {@link HashPosition}s
+	 * @param valuesIn {@link SeekingInput} containing the value data
+	 */
 	public HashFileReader(
 			MessageDigestUtil mdu, 
 			Serialization serde, 
@@ -49,7 +98,13 @@ public class HashFileReader<K, V> implements Closeable {
 		closed = false;
 	}
 	
-	public HashPosition position(K key) throws IOException {
+	/**
+	 * Return the {@link HashPosition} of a key object, or {@code null} if not found
+	 * @param key The key object
+	 * @return The {@link HashPosition} for the corresponding value, or {@code null} if the key was not found
+	 * @throws IOException
+	 */
+	public HashPosition positionOf(K key) throws IOException {
 		if(closed)
 			throw new IllegalStateException("already closed");
 		
@@ -68,12 +123,24 @@ public class HashFileReader<K, V> implements Closeable {
 		return keys.get(hpi);
 	}
 	
+	/**
+	 * Returns whether this hashfile has a given key
+	 * @param key The key to check for
+	 * @return {@code true} if the key is found, {@code false} if the key is not found
+	 * @throws IOException
+	 */
 	public boolean containsKey(K key) throws IOException {
-		return position(key) != null;
+		return positionOf(key) != null;
 	}
 	
+	/**
+	 * Returns the value associated with a given key, or {@code null} if the key is not found
+	 * @param key The key
+	 * @return The value associated with the key, or {@code null} if the key is not found
+	 * @throws IOException
+	 */
 	public V get(K key) throws IOException {
-		HashPosition hp = position(key);
+		HashPosition hp = positionOf(key);
 		if(hp == null)
 			return null;
 		

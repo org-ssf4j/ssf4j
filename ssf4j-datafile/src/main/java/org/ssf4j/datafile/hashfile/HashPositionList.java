@@ -12,13 +12,31 @@ import java.util.RandomAccess;
 
 import org.ssf4j.datafile.SeekingInput;
 
+/**
+ * A {@link List} of {@link HashPosition}, backed by a {@link SeekingInput}
+ * @author robin
+ *
+ */
 public class HashPositionList extends AbstractList<HashPosition> implements RandomAccess, Closeable {
+	
+	/**
+	 * Copy, sort, and write the argument {@link HashPosition}s to the output stream
+	 * @param hashes The {@link HashPosition}s to write
+	 * @param out The output stream
+	 * @throws IOException
+	 */
 	public static void write(List<HashPosition> hashes, OutputStream out) throws IOException {
 		hashes = new ArrayList<HashPosition>(hashes);
 		Collections.sort(hashes);
 		write(hashes.iterator(), out);
 	}
 	
+	/**
+	 * Write pre-sorted {@link HashPosition}s to the output stream
+	 * @param hashes The {@link HashPosition}s to write
+	 * @param out The output stream
+	 * @throws IOException
+	 */
 	public static void write(Iterator<HashPosition> hashes, OutputStream out) throws IOException {
 		HashPosition prev = null;
 		while(hashes.hasNext()) {
@@ -30,22 +48,34 @@ public class HashPositionList extends AbstractList<HashPosition> implements Rand
 		}
 	}
 	
+	/**
+	 * The input backing this {@link List}
+	 */
 	private SeekingInput input;
+	/**
+	 * The persisted size of a {@link HashPosition}
+	 */
 	private int hashPersistedSize;
 	
+	/**
+	 * Create a {@link HashPositionList} from a {@link SeekingInput} for a given {@link MessageDigestUtil}
+	 * @param input The backing {@link SeekingInput}
+	 * @param mdu The source of message digests
+	 */
 	public HashPositionList(SeekingInput input, MessageDigestUtil mdu) {
 		this(input, HashPosition.persistedSize(mdu));
 	}
 	
+	/**
+	 * Create a {@link HashPositionList} from a {@link SeekingInput} for a given size of {@link HashPosition}
+	 * @param input The backing {@link SeekingInput}
+	 * @param hashPersistedSize The size of a persisted {@link HashPosition}
+	 */
 	public HashPositionList(SeekingInput input, int hashPersistedSize) {
 		this.input = input;
 		this.hashPersistedSize = hashPersistedSize;
 	}
 
-	public int indexOfHash(byte[] hash) {
-		return indexOf(new HashPosition(hash, 0));
-	}
-	
 	@Override
 	public int indexOf(Object o) {
 		if(o instanceof HashPosition) {

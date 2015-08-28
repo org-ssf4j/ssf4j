@@ -2,8 +2,15 @@ package org.ssf4j.datafile.hashfile;
 
 import java.util.Comparator;
 
+/**
+ * Utility methods for dealing with byte arrays
+ * @author robin
+ *
+ */
 class ByteArrays {
-	
+	/**
+	 * Comparator for unsigned ordering of byte arrays
+	 */
 	public static final Comparator<byte[]> BYTE_ARRAY_ORDER = new Comparator<byte[]>() {
 		@Override
 		public int compare(byte[] o1, byte[] o2) {
@@ -25,8 +32,17 @@ class ByteArrays {
 		}
 	};
 	
+	/**
+	 * The length of a {@code long} in bytes
+	 */
 	public static final int LENGTH_LONG = 8;
 
+	/**
+	 * Write a {@code long} to a {@code byte[]} at an offset
+	 * @param b The byte array
+	 * @param off The offset
+	 * @param v The {@code long} to write
+	 */
 	public static void toBytes(byte[] b, int off, long v) {
 		b[off + 0] = (byte) (v >>> 56);
 		b[off + 1] = (byte) (v >>> 48);
@@ -37,7 +53,13 @@ class ByteArrays {
 		b[off + 6] = (byte) (v >>> 8);
 		b[off + 7] = (byte) (v >>> 0);
 	}
-	
+
+	/**
+	 * Read a {@code long} from a {@code byte[]} at an offset
+	 * @param b The byte array
+	 * @param off The offset
+	 * @return The read {@code long}
+	 */
 	public static long toLong(byte[] b, int off) {
 		long v = 0;
 		v |= (b[off + 0] & 0xFFL) << 56;

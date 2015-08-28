@@ -4,15 +4,31 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * {@link FilterOutputStream} that counts written bytes
+ * @author robin
+ *
+ */
 class CountingOutputStream extends FilterOutputStream {
 
+	/**
+	 * The number of bytes written so far
+	 */
 	private long length;
 	
+	/**
+	 * Create a new {@link CountingOutputStream}, which counts written bytes
+	 * @param out The {@link OutputStream} to wrap
+	 */
 	public CountingOutputStream(OutputStream out) {
 		super(out);
 		length = 0;
 	}
 	
+	/**
+	 * Returns the number of bytes written so far
+	 * @return The number of bytes written so far
+	 */
 	public long getLength() {
 		return length;
 	}
