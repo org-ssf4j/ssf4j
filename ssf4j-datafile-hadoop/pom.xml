@@ -7,4 +7,21 @@
     <relativePath>../ssf4j-parent</relativePath>
   </parent>
   <artifactId>ssf4j-datafile-hadoop</artifactId>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.ssf4j</groupId>
+  		<artifactId>ssf4j-api</artifactId>
+  		<version>0.4-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.ssf4j</groupId>
+  		<artifactId>ssf4j-datafile</artifactId>
+  		<version>0.4-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.hadoop</groupId>
+  		<artifactId>hadoop-common</artifactId>
+  		<version>2.2.0</version>
+  	</dependency>
+  </dependencies>
 </project>
