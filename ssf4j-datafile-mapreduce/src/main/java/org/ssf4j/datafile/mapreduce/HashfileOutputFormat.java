@@ -73,11 +73,11 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 	}
 	
 	protected static Path getKeysTempOutputPath(TaskAttemptContext ctx) {
-		return getOutputPath(ctx, ".keys.tmp");
+		return getOutputPath(ctx, ".keys.tmp." + ctx.getTaskAttemptID().getId());
 	}
 	
 	protected static Path getValuesTempOutputPath(TaskAttemptContext ctx) {
-		return getOutputPath(ctx, ".values.tmp");
+		return getOutputPath(ctx, ".values.tmp." + ctx.getTaskAttemptID().getId());
 	}
 	
 	protected static String getSerializationClassName(Configuration c) {

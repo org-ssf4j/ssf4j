@@ -64,7 +64,7 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 	}
 	
 	protected static Path getValuesTempOutputPath(TaskAttemptContext ctx) {
-		return getOutputPath(ctx, ".values.tmp");
+		return getOutputPath(ctx, ".values.tmp." + ctx.getTaskAttemptID().getId());
 	}
 	
 	protected static String getSerializationClassName(Configuration c) {
@@ -112,9 +112,11 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 
 	protected static class ValuefileRecordWriter<V> extends RecordWriter<NullWritable, V> {
 		protected TaskAttemptContext context;
+		protected FSDataOutputStream out;
 		
 		protected Class<V> valueType;
 		protected Serialization serde;
+		protected Serializer<V> ser;
 		
 		@SuppressWarnings("unchecked")
 		public ValuefileRecordWriter(TaskAttemptContext context) throws IOException {
@@ -124,6 +126,11 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 			
 			valueType = (Class<V>) getValueType(c);
 			serde = Serializations.get(getSerializationClassName(c));
+			
+			Path valuesPath = getValuesTempOutputPath(context);
+			
+			out = valuesPath.getFileSystem(c).create(valuesPath, true);
+			ser = serde.newSerializer(out, valueType);
 		}
 		
 		@Override
@@ -135,23 +142,19 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 			vser.close();
 			long vlen = cout.getLength();
 			
-			Configuration c = context.getConfiguration();
-			
-			Path valuesPath = getValuesTempOutputPath(context);
-			
-			FSDataOutputStream valuesOut = valuesPath.getFileSystem(c).append(valuesPath);
-			
 			byte[] lbytes = new byte[ByteArrays.LENGTH_LONG];
 			ByteArrays.toBytes(lbytes, 0, vlen);
-			valuesOut.write(lbytes);
+			out.write(lbytes);
 
-			Serializer<V> ser = serde.newSerializer(valuesOut, valueType);
 			ser.write(value);
-			ser.close();
+			ser.flush();
 		}
 
 		@Override
 		public void close(TaskAttemptContext context) throws IOException, InterruptedException {
+			out.hflush();
+			out.hsync();
+			ser.close();
 		}
 	}
 
