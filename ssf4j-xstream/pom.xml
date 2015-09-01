@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.ssf4j</groupId>
 		<artifactId>ssf4j-parent</artifactId>
-		<version>0.4-SNAPSHOT</version>
+		<version>0.4</version>
 		<relativePath>../ssf4j-parent</relativePath>
 	</parent>
 	<dependencies>
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-api</artifactId>
-			<version>0.4-SNAPSHOT</version>
+			<version>0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-api</artifactId>
-			<version>0.4-SNAPSHOT</version>
+			<version>0.4</version>
 			<classifier>tests</classifier>
 			<scope>test</scope>
 		</dependency>
