@@ -165,6 +165,7 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 			valuesTempPath.getFileSystem(taskContext.getConfiguration()).mkdirs(valuesTempPath.getParent());
 			
 			valuesTempPath.getFileSystem(c).delete(valuesTempPath, false);
+			valuesTempPath.getFileSystem(c).create(valuesTempPath).close();
 		}
 	
 		@Override
