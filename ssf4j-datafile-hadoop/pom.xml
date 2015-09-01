@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.ssf4j</groupId>
 		<artifactId>ssf4j-parent</artifactId>
-		<version>0.4-SNAPSHOT</version>
+		<version>0.5-SNAPSHOT</version>
 		<relativePath>../ssf4j-parent</relativePath>
 	</parent>
 	<artifactId>ssf4j-datafile-hadoop</artifactId>
@@ -12,17 +12,17 @@
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-api</artifactId>
-			<version>0.4-SNAPSHOT</version>
+			<version>0.5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-datafile</artifactId>
-			<version>0.4-SNAPSHOT</version>
+			<version>0.5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.ssf4j</groupId>
 			<artifactId>ssf4j-avro-binary</artifactId>
-			<version>0.4-SNAPSHOT</version>
+			<version>0.5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
