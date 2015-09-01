@@ -1,0 +1,9 @@
+{
+	"type": "record",
+	"name": "ValuefilePosition",
+	"namespace": "org.ssf4j.datafile.hadoop",
+	"fields": [
+		{"name": "path", "type": "string"},
+		{"name": "offset", "type": "long"}	
+	]
+}

@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>org.ssf4j</groupId>
 	<artifactId>ssf4j-parent</artifactId>
-	<version>0.3.4</version>
+	<version>0.4</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>../ssf4j-api</module>
@@ -21,6 +21,8 @@
 		<module>../ssf4j-purplejrank</module>
 		<module>../ssf4j-xstream</module>
 		<module>../ssf4j-datafile</module>
+		<module>../ssf4j-datafile-hadoop</module>
+		<module>../ssf4j-datafile-mapreduce</module>
 	</modules>
 	<build>
 		<pluginManagement>
