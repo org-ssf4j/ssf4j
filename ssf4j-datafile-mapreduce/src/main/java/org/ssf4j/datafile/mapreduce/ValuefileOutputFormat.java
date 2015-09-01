@@ -13,6 +13,7 @@ import org.apache.hadoop.mapreduce.OutputCommitter;
 import org.apache.hadoop.mapreduce.OutputFormat;
 import org.apache.hadoop.mapreduce.RecordWriter;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.apache.hadoop.mapreduce.TaskType;
 import org.ssf4j.Serialization;
 import org.ssf4j.Serializations;
 import org.ssf4j.Serializer;
@@ -161,6 +162,9 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 	protected static class ValuefileOutputCommitter extends OutputCommitter {
 		@Override
 		public void setupTask(TaskAttemptContext taskContext) throws IOException {
+			if(taskContext.getTaskAttemptID().getTaskType() != TaskType.REDUCE)
+				return;
+			
 			Configuration c = taskContext.getConfiguration();
 			
 			Path valuesTempPath = getValuesTempOutputPath(taskContext);
@@ -177,6 +181,9 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 	
 		@Override
 		public boolean needsTaskCommit(TaskAttemptContext taskContext) throws IOException {
+			if(taskContext.getTaskAttemptID().getTaskType() != TaskType.REDUCE)
+				return false;
+			
 			Configuration c = taskContext.getConfiguration();
 			
 			Path valuesTempPath = getValuesTempOutputPath(taskContext);
@@ -186,6 +193,9 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 	
 		@Override
 		public void commitTask(TaskAttemptContext taskContext) throws IOException {
+			if(taskContext.getTaskAttemptID().getTaskType() != TaskType.REDUCE)
+				return;
+			
 			Configuration c = taskContext.getConfiguration();
 			
 			Path valuesTempPath = getValuesTempOutputPath(taskContext);
@@ -198,6 +208,9 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 	
 		@Override
 		public void abortTask(TaskAttemptContext taskContext) throws IOException {
+			if(taskContext.getTaskAttemptID().getTaskType() != TaskType.REDUCE)
+				return;
+			
 			Configuration c = taskContext.getConfiguration();
 			
 			Path valuesTempPath = getValuesTempOutputPath(taskContext);

@@ -11,6 +11,7 @@ import org.apache.hadoop.mapreduce.OutputCommitter;
 import org.apache.hadoop.mapreduce.OutputFormat;
 import org.apache.hadoop.mapreduce.RecordWriter;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.apache.hadoop.mapreduce.TaskType;
 import org.ssf4j.Serialization;
 import org.ssf4j.Serializations;
 import org.ssf4j.datafile.hashfile.HashFileWriter;
@@ -172,6 +173,9 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 	protected static class HashfileOutputCommitter extends OutputCommitter {
 		@Override
 		public void setupTask(TaskAttemptContext taskContext) throws IOException {
+			if(taskContext.getTaskAttemptID().getTaskType() != TaskType.REDUCE)
+				return;
+			
 			Configuration c = taskContext.getConfiguration();
 			
 			Path keysTempPath = getKeysTempOutputPath(taskContext);
@@ -190,6 +194,9 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 	
 		@Override
 		public boolean needsTaskCommit(TaskAttemptContext taskContext) throws IOException {
+			if(taskContext.getTaskAttemptID().getTaskType() != TaskType.REDUCE)
+				return false;
+			
 			Configuration c = taskContext.getConfiguration();
 			
 			Path keysTempPath = getKeysTempOutputPath(taskContext);
@@ -200,6 +207,9 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 	
 		@Override
 		public void commitTask(TaskAttemptContext taskContext) throws IOException {
+			if(taskContext.getTaskAttemptID().getTaskType() != TaskType.REDUCE)
+				return;
+			
 			Configuration c = taskContext.getConfiguration();
 			
 			Path keysTempPath = getKeysTempOutputPath(taskContext);
@@ -217,6 +227,9 @@ public class HashfileOutputFormat<K, V> extends OutputFormat<K, V> {
 	
 		@Override
 		public void abortTask(TaskAttemptContext taskContext) throws IOException {
+			if(taskContext.getTaskAttemptID().getTaskType() != TaskType.REDUCE)
+				return;
+			
 			Configuration c = taskContext.getConfiguration();
 			
 			Path keysTempPath = getKeysTempOutputPath(taskContext);
