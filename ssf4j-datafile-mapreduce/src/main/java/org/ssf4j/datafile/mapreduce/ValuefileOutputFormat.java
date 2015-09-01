@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
@@ -112,10 +113,8 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 	protected static class ValuefileRecordWriter<V> extends RecordWriter<NullWritable, V> {
 		protected TaskAttemptContext context;
 		
-		protected OutputStream valuesOut;
 		protected Class<V> valueType;
 		protected Serialization serde;
-		protected Serializer<V> ser;
 		
 		@SuppressWarnings("unchecked")
 		public ValuefileRecordWriter(TaskAttemptContext context) throws IOException {
@@ -123,12 +122,8 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 			
 			Configuration c = context.getConfiguration();
 			
-			Path valuesPath = getValuesTempOutputPath(context);
-			
-			valuesOut = valuesPath.getFileSystem(c).create(valuesPath, true);
 			valueType = (Class<V>) getValueType(c);
 			serde = Serializations.get(getSerializationClassName(c));
-			ser = serde.newSerializer(valuesOut, valueType);
 		}
 		
 		@Override
@@ -140,17 +135,23 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 			vser.close();
 			long vlen = cout.getLength();
 			
+			Configuration c = context.getConfiguration();
+			
+			Path valuesPath = getValuesTempOutputPath(context);
+			
+			FSDataOutputStream valuesOut = valuesPath.getFileSystem(c).append(valuesPath);
+			
 			byte[] lbytes = new byte[ByteArrays.LENGTH_LONG];
 			ByteArrays.toBytes(lbytes, 0, vlen);
 			valuesOut.write(lbytes);
 
+			Serializer<V> ser = serde.newSerializer(valuesOut, valueType);
 			ser.write(value);
-			ser.flush();
+			ser.close();
 		}
 
 		@Override
 		public void close(TaskAttemptContext context) throws IOException, InterruptedException {
-			ser.close();
 		}
 	}
 
