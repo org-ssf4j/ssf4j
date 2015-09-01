@@ -58,6 +58,7 @@ public class ValuefileInputFormat<V> extends FileInputFormat<ValuefilePosition, 
 	protected static class ValuefileRecordReader<V> extends RecordReader<ValuefilePosition, V> {
 		protected FSDataInputStream in;
 		protected FileSplit split;
+		protected long position;
 
 		protected Serialization serde;
 		protected Class<V> valueType;
@@ -73,7 +74,8 @@ public class ValuefileInputFormat<V> extends FileInputFormat<ValuefilePosition, 
 			
 			split = (FileSplit) s;
 			in = split.getPath().getFileSystem(context.getConfiguration()).open(split.getPath());
-			while(in.getPos() < split.getStart())
+			position = 0;
+			while(position < split.getStart())
 				skipKeyValue();
 		}
 
@@ -81,25 +83,26 @@ public class ValuefileInputFormat<V> extends FileInputFormat<ValuefilePosition, 
 			byte[] lbytes = new byte[ByteArrays.LENGTH_LONG];
 			in.readFully(lbytes);
 			long vlen = ByteArrays.toLong(lbytes, 0);
-			in.skip(vlen);
+			position += ByteArrays.LENGTH_LONG + vlen;
 		}
 		
 		@Override
 		public boolean nextKeyValue() throws IOException, InterruptedException {
-			if(in.getPos() >= split.getStart() + split.getLength())
+			if(position >= split.getStart() + split.getLength())
 				return false;
-			long position = in.getPos();
 			
 			currentKey = new ValuefilePosition(split.getPath().toString(), position);
-			
+
+			in.seek(position);
 			byte[] lbytes = new byte[ByteArrays.LENGTH_LONG];
 			in.readFully(lbytes);
 			long vlen = ByteArrays.toLong(lbytes, 0);
 			
+			in.seek(position + ByteArrays.LENGTH_LONG);
 			Deserializer<V> vdes = serde.newDeserializer(in, valueType);
 			currentValue = vdes.read();
 			
-			in.seek(position + ByteArrays.LENGTH_LONG + vlen);
+			position += ByteArrays.LENGTH_LONG + vlen;
 			
 			return true;
 		}
