@@ -1,5 +1,6 @@
 package org.ssf4j.datafile.mapreduce;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -117,7 +118,6 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 		
 		protected Class<V> valueType;
 		protected Serialization serde;
-		protected Serializer<V> ser;
 		
 		@SuppressWarnings("unchecked")
 		public ValuefileRecordWriter(TaskAttemptContext context) throws IOException {
@@ -131,31 +131,29 @@ public class ValuefileOutputFormat<V> extends OutputFormat<NullWritable, V> {
 			Path valuesPath = getValuesTempOutputPath(context);
 			
 			out = valuesPath.getFileSystem(c).create(valuesPath, true);
-			ser = serde.newSerializer(out, valueType);
 		}
 		
 		@Override
 		public void write(NullWritable key, V value) throws IOException, InterruptedException {
-			CountingOutputStream cout = new CountingOutputStream(NullOutputStream.get());
-			
-			Serializer<V> vser = serde.newSerializer(cout, valueType);
+			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+			Serializer<V> vser = serde.newSerializer(bytes, valueType);
 			vser.write(value);
 			vser.close();
-			long vlen = cout.getLength();
+			
+			long vlen = bytes.size();
 			
 			byte[] lbytes = new byte[ByteArrays.LENGTH_LONG];
 			ByteArrays.toBytes(lbytes, 0, vlen);
 			out.write(lbytes);
 
-			ser.write(value);
-			ser.flush();
+			out.write(bytes.toByteArray());
 		}
 
 		@Override
 		public void close(TaskAttemptContext context) throws IOException, InterruptedException {
 			out.hflush();
 			out.hsync();
-			ser.close();
+			out.close();
 		}
 	}
 
