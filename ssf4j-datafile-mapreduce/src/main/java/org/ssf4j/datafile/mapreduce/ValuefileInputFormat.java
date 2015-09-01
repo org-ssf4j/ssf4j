@@ -81,6 +81,7 @@ public class ValuefileInputFormat<V> extends FileInputFormat<ValuefilePosition, 
 
 		protected void skipKeyValue() throws IOException {
 			byte[] lbytes = new byte[ByteArrays.LENGTH_LONG];
+			in.seek(position);
 			in.readFully(lbytes);
 			long vlen = ByteArrays.toLong(lbytes, 0);
 			position += ByteArrays.LENGTH_LONG + vlen;
