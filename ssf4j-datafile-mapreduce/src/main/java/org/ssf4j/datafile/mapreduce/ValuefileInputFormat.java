@@ -52,10 +52,10 @@ public class ValuefileInputFormat<V> extends FileInputFormat<ValuefilePosition, 
 	@Override
 	public RecordReader<ValuefilePosition, V> createRecordReader(InputSplit split, TaskAttemptContext context)
 			throws IOException, InterruptedException {
-		return new HashfileRecordReader<V>();
+		return new ValuefileRecordReader<V>();
 	}
 	
-	protected static class HashfileRecordReader<V> extends RecordReader<ValuefilePosition, V> {
+	protected static class ValuefileRecordReader<V> extends RecordReader<ValuefilePosition, V> {
 		protected FSDataInputStream in;
 		protected FileSplit split;
 
