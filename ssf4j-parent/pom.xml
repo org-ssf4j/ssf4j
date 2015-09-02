@@ -78,7 +78,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>2.10.3</version>
 				<executions>
 					<execution>
 						<id>jar</id>
@@ -86,9 +86,14 @@
 						<goals>
 							<goal>jar</goal>
 						</goals>
-						<configuration>
-							<aggregate>true</aggregate>
-						</configuration>
+					</execution>
+					<execution>
+						<id>aggregate</id>
+						<phase>package</phase>
+						<goals>
+							<goal>aggregate</goal>
+						</goals>
+						<inherited>false</inherited>
 					</execution>
 				</executions>
 			</plugin>
